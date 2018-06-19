@@ -1,14 +1,14 @@
 {
 
-  "description": "Adds custom CSS to AniList profile",
+  "description": "Add functionalities to r/anime",
   "manifest_version": 2,
-  "name": "AniList Custom CSS",
+  "name": "r/anime Enhanced",
   "version": "1.0",
   "permissions": [
     "https://shit-taste.net/",
     "activeTab"
   ],
-  "homepage_url": "https://github.com/Chariotwheel/AniList-Extension",
+  "homepage_url": "https://github.com/Chariotwheel/ranime-Extension",
   "icons": {
     "48": "icons/border-48.png"
   },
@@ -16,15 +16,15 @@
     "default_icon": {
       "48": "icons/border-48.png"
     },
-    "default_title": "Custom AniList",
+    "default_title": "r/anime Enhanced",
     "default_popup": "popup/options.html"
   },
   "content_scripts": [
     {
-      "matches": ["*://*.anilist.co/user/*"],
+      "matches": ["*://*.reddit.com/r/anime/*"],
       "js": [
         "jquery-3.3.1.min.js",
-        "customcss.js"
+        "enhance.js"
       ]
     }
   ]
