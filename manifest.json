@@ -1,0 +1,32 @@
+{
+
+  "description": "Adds custom CSS to AniList profile",
+  "manifest_version": 2,
+  "name": "AniList Custom CSS",
+  "version": "1.0",
+  "permissions": [
+    "https://shit-taste.net/",
+    "activeTab"
+  ],
+  "homepage_url": "https://github.com/Chariotwheel/AniList-Extension",
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "48": "icons/border-48.png"
+    },
+    "default_title": "Custom AniList",
+    "default_popup": "popup/options.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.anilist.co/user/*"],
+      "js": [
+        "jquery-3.3.1.min.js",
+        "customcss.js"
+      ]
+    }
+  ]
+
+}
