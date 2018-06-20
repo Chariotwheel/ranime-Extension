@@ -1,16 +1,5 @@
-var commentfaces = [
-  "firstthinginthemorning",
-  "watashihasdeclined",
-  "killitwithfire",
-  "toradorasalute",
-  "kukuku2",
-  "akkotears"
-];
-
-// https://b.thumbs.redditmedia.com/-H-7U_6ANr6zR_Mvkzbv0hiKzlVdm1vR7G6egC5WICs.css
-// regex: \.md \[href\$="#.*\]
-
-var apiurl = 'https://shit-taste.net/api/user/?user=Chariotwheel';
+var apiurl = 'https://shit-taste.net/api/commentfaces.json';
+var commentfaces = [];
 
 var request = new XMLHttpRequest();
 request.open("POST", apiurl);
@@ -19,18 +8,16 @@ request.overrideMimeType("text/plain");
 request.onload = function()
 {
     var options = JSON.parse(request.responseText);
-    console.log("Response received: " + options[0]);
-    //$(".page-content .avatar").css("max-width","230px");
-    //$(".name").css("color","red");
+    options.forEach(function(option){
+      commentfaces.push(option);
+    });
 };
 request.send();
 
 var filteredFaces = [];
 
-var menu = '<div style="" class="md"><form action="" id="commentfaces">';
-menu += '<input type="text" id="commentfacesearch" placeholder="search commentfaces"><br /><div id="commentfacewrapper" style="height:150px;display:none;overflow-hidden;">';
-menu += '<div id="commentfacecontainer" style="width:100%;height:100%;overflow-y:scroll;padding-right:17px;box-sizing:content-box;">';
-menu += '</div></div></form></div>';
+var menu = '<div style="" class="md"><form action="" id="commentfaces"><input type="text" id="commentfacesearch" style="padding: 4px;margin-bottom: 5px;border: 2px solid lightgrey;border-radius: 5px;color: grey;" placeholder="search commentfaces"><br /><div id="commentfacewrapper" style="height:150px;display:none;overflow-hidden;">';
+menu += '<div id="commentfacecontainer" style="width:100%;height:100%;overflow-y:scroll;padding-right:17px;box-sizing:content-box;"></div></div></form></div>';
 
 $( ".usertext-edit" ).prepend( menu );
 
@@ -38,7 +25,7 @@ var classname = document.getElementsByClassName("addCommentface");
 
 document.getElementById("commentfacesearch").addEventListener('keyup', function() {
 
-  if(this.value.length > 0) {
+  if(this.value.length > 1) {
 
     var result = "";
     let filteredFaces = commentfaces.filter(x => x.toLowerCase().includes(this.value));
