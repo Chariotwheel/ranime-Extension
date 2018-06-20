@@ -1,4 +1,8 @@
-var apiurl = 'https://shit-taste.net/api/commentfacescall.php?sub=anime';
+var url = window.location.href;
+url = url.replace("https://www.reddit.com/r/","");
+url = url.slice(0, url.indexOf("/"));
+
+var apiurl = 'https://shit-taste.net/api/commentfacescall.php?sub='+url;
 var commentfaces = [];
 
 var request = new XMLHttpRequest();
@@ -32,7 +36,12 @@ document.getElementById("commentfacesearch").addEventListener('keyup', function(
     $("#commentfacewrapper").css("display","inherit");
 
     filteredFaces.forEach(function(filteredFace) {
-      result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" rel=\"nofollow\"></a>";
+      if(url == "manga") {
+        result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
+      }
+      else if(url == "anime") {
+        result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" rel=\"nofollow\"></a>";
+      }
     });
 
     $("#commentfacecontainer").html(result);
