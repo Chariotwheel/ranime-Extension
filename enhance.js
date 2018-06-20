@@ -1,4 +1,4 @@
-var apiurl = 'https://shit-taste.net/api/commentfaces.json';
+var apiurl = 'https://shit-taste.net/api/commentfacescall.php?sub=anime';
 var commentfaces = [];
 
 var request = new XMLHttpRequest();
