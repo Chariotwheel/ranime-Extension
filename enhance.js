@@ -20,41 +20,63 @@ request.send();
 
 var filteredFaces = [];
 
-var menu = '<div style="" class="md"><form action="" id="commentfaces"><input type="text" id="commentfacesearch" style="padding: 4px;margin-bottom: 5px;border: 2px solid lightgrey;border-radius: 5px;color: grey;" placeholder="search commentfaces"><br /><div id="commentfacewrapper" style="height:150px;display:none;overflow-hidden;">';
-menu += '<div id="commentfacecontainer" style="width:100%;height:100%;overflow-y:scroll;padding-right:17px;box-sizing:content-box;"></div></div></form></div>';
-
-$( ".usertext-edit" ).prepend( menu );
+var menu = '<div style="" class="md"><form action="" class="commentfaces"><input type="text" class="commentfacesearch" style="padding: 4px;margin-bottom: 5px;border: 2px solid lightgrey;border-radius: 5px;color: grey;" placeholder="search commentfaces">';
+menu += '<div class="commentfacewrapper" style="height:150px;display:none;overflow-hidden;">';
+menu += '<div class="commentfacecontainer" style="width:100%;height:100%;overflow-y:scroll;padding-right:17px;box-sizing:content-box;"></div></div></form></div>';
 
 var classname = document.getElementsByClassName("addCommentface");
+var classnamesearch = document.getElementsByClassName("commentfacesearch");
 
-document.getElementById("commentfacesearch").addEventListener('keyup', function() {
+var replyButton = document.getElementsByClassName("reply-button");
 
-  if(this.value.length > 1) {
+for(var i = 0; i < replyButton.length; i++){
+  replyButton[i].addEventListener('click', function(){
+    var form = $( this ).parents(".entry").siblings(".child").children('form');
+    console.log( form );
+    form.prepend( menu );
+    /*createCommentfacefield(form) {
 
-    var result = "";
-    let filteredFaces = commentfaces.filter(x => x.toLowerCase().includes(this.value));
-    $("#commentfacewrapper").css("display","inherit");
+    }*/
+  });
+}
 
-    filteredFaces.forEach(function(filteredFace) {
-      if(url == "manga") {
-        result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
+/*function createCommentfacefield(form) {
+
+  for(var j = 0; j < classnamesearch.length; j++) {
+
+    classnamesearch[j].addEventListener('keyup', function() {
+
+      if(this.value.length > 1) {
+
+        var result = "";
+        let filteredFaces = commentfaces.filter(x => x.toLowerCase().includes(this.value));
+        $(this).siblings(".commentfacewrapper").css("display","inherit");
+
+        filteredFaces.forEach(function(filteredFace) {
+          if(url == "manga") {
+            result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
+          }
+          else if(url == "anime") {
+            result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" rel=\"nofollow\"></a>";
+          }
+        });
+
+        $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+
+        for (var i = 0; i < classname.length; i++) {
+            classname[i].addEventListener('click', function() {
+
+              var commentcode = this.getAttribute("href");
+              var output = '[]('+commentcode+')';
+              $(this).parents(".md").siblings(".md").children("textarea").val($('textarea').val()+output);
+              console.log($(this).parents(".md").siblings(".md").children("textarea"));
+
+            }, false);
+        }
       }
-      else if(url == "anime") {
-        result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" rel=\"nofollow\"></a>";
-      }
+
     });
 
-    $("#commentfacecontainer").html(result);
-
-    for (var i = 0; i < classname.length; i++) {
-        classname[i].addEventListener('click', function() {
-
-          var commentcode = this.getAttribute("href");
-          var output = '[]('+commentcode+')';
-          $("textarea").val($('textarea').val()+output);
-
-        }, false);
-    }
   }
 
-});
+}*/
