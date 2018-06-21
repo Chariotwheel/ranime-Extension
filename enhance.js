@@ -24,8 +24,7 @@ var menu = '<div style="" class="md"><form action="" class="commentfaces"><input
 menu += '<div class="commentfacewrapper" style="height:150px;display:none;overflow-hidden;">';
 menu += '<div class="commentfacecontainer" style="width:100%;height:100%;overflow-y:scroll;padding-right:17px;box-sizing:content-box;"></div></div></form></div>';
 
-var classname = document.getElementsByClassName("addCommentface");
-var classnamesearch = document.getElementsByClassName("commentfacesearch");
+
 
 var replyButton = document.getElementsByClassName("reply-button");
 
@@ -41,6 +40,9 @@ for(var i = 0; i < replyButton.length; i++){
 }
 
 /*function createCommentfacefield(form) {
+
+  var classname = document.getElementsByClassName("addCommentface");
+  var classnamesearch = document.getElementsByClassName("commentfacesearch");
 
   for(var j = 0; j < classnamesearch.length; j++) {
 
