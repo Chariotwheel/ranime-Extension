@@ -113,53 +113,7 @@ function createCommentfacefield(form) {
             ** Setting up actions on Clicking the Dummy Commentfaces
             */
 
-            classname[i].addEventListener('click', function() {
-
-              /*
-              ** Get href from clickedCommentface to set it into the textarea
-              */
-
-              var commentcode = this.getAttribute("href");
-              var commentfacetext = this.innerHTML;
-              commentfacetext = commentfacetext.replace("<strong>","**");
-              commentfacetext = commentfacetext.replace("</strong>","**");
-              if (this.title != "") {
-                var commentfacetexthover = " '" + this.title + "'";
-              }
-              else {
-                var commentfacetexthover = "";
-              }
-              var output = '['+commentfacetext+']('+commentcode+commentfacetexthover+')';
-
-              /*
-              ** Get texarea to insert to
-              */
-
-              var formfield = $(this).parents(".commentfacecontainer").parents(".commentfacewrapper").parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
-
-              var cursorposition = formfield.prop("selectionStart");
-              var formfieldcontent = formfield.val();
-
-              if(cursorposition == "undefined") {
-                formfield.val(formfield.val() + output);
-              }
-              else {
-                if(formfieldcontent.length > 0) {
-
-                  var formfieldbefore = formfieldcontent.substr(0,cursorposition);
-                  var formfieldafter = formfieldcontent.substr(cursorposition,formfieldcontent.length - 1 )
-                  formfield.val(formfieldbefore + output + formfieldafter);
-
-                }
-                else {
-
-                  formfield.val(output);
-
-                }
-
-              }
-
-            }, false);
+            classname[i].addEventListener('click', addClickEvent, false);
         }
       }
 
@@ -200,6 +154,55 @@ function createCommentfacefield(form) {
         }
       });
     });
+  }
+
+}
+
+
+function addClickEvent() {
+
+  /*
+  ** Get href from clickedCommentface to set it into the textarea
+  */
+
+  var commentcode = this.getAttribute("href");
+  var commentfacetext = this.innerHTML;
+  commentfacetext = commentfacetext.replace("<strong>","**");
+  commentfacetext = commentfacetext.replace("</strong>","**");
+  if (this.title != "") {
+    var commentfacetexthover = " '" + this.title + "'";
+  }
+  else {
+    var commentfacetexthover = "";
+  }
+  var output = '['+commentfacetext+']('+commentcode+commentfacetexthover+')';
+
+  /*
+  ** Get texarea to insert to
+  */
+
+  var formfield = $(this).parents(".commentfacecontainer").parents(".commentfacewrapper").parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
+
+  var cursorposition = formfield.prop("selectionStart");
+  var formfieldcontent = formfield.val();
+
+  if(cursorposition == "undefined") {
+    formfield.val(formfield.val() + output);
+  }
+  else {
+    if(formfieldcontent.length > 0) {
+
+      var formfieldbefore = formfieldcontent.substr(0,cursorposition);
+      var formfieldafter = formfieldcontent.substr(cursorposition,formfieldcontent.length - 1 )
+      formfield.val(formfieldbefore + output + formfieldafter);
+
+    }
+    else {
+
+      formfield.val(output);
+
+    }
+
   }
 
 }
