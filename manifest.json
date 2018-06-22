@@ -5,8 +5,7 @@
   "name": "r/anime Enhanced",
   "version": "1.0",
   "permissions": [
-    "https://shit-taste.net/",
-    "activeTab"
+    "https://shit-taste.net/"
   ],
   "homepage_url": "https://github.com/Chariotwheel/ranime-Extension",
   "icons": {
