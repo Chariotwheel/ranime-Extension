@@ -21,6 +21,9 @@ request.send();
 var filteredFaces = [];
 
 var menu = '<div style="" class="md"><form action="" class="commentfaces"><input type="text" class="commentfacesearch" style="padding: 4px;margin-bottom: 5px;border: 2px solid lightgrey;border-radius: 5px;color: grey;" placeholder="search commentfaces">';
+menu += '<input type="text" class="commentfacetext texttop" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Toptext">';
+menu += '<input type="text" class="commentfacetext textbottom" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Bottomtext">';
+menu += '<input type="text" class="commentfacetext texthover" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Hovertext">';
 menu += '<div class="commentfacewrapper" style="height:150px;display:none;overflow-hidden;">';
 menu += '<div class="commentfacecontainer" style="width:100%;height:100%;overflow-y:scroll;padding-right:17px;box-sizing:content-box;"></div></div></form></div>';
 
@@ -94,6 +97,37 @@ function createCommentfacefield(form) {
 
     });
 
+  }
+
+  var commentfacetext = document.getElementsByClassName("commentfacetext");
+
+  for(var i = 0; i < commentfacetext.length; i++){
+    commentfacetext[i].addEventListener('keyup', function(){
+
+      var inputclass = $( this ).attr('class').split(' ')[1];
+      var inputvalue = $( this ).val();
+
+      var commentfacefield = $( this ).siblings(".commentfacewrapper").children(".commentfacecontainer").children("a");
+      commentfacefield.each(function() {
+        var facecontent = $( this ).html();
+        if(inputclass == "texttop") {
+          if(/<strong>.*<\/strong>/.test(facecontent)) {
+            var strong = facecontent.match("<strong>.*<\/strong>");
+            $( this ).html(inputvalue + strong);
+          }
+          else {
+            $( this ).html(inputvalue);
+          }
+        }
+        else if(inputclass == "textbottom") {
+          var strong = facecontent.replace(/<strong>.*<\/strong>/g,"");
+          $( this ).html(strong + " <strong>"+inputvalue+"</strong>");
+        }
+        else if(inputclass == "texthover") {
+          $( this ).attr("title",inputvalue);
+        }
+      });
+    });
   }
 
 }
