@@ -1,6 +1,14 @@
+/*
+** Get current url to distinct between Subreddits
+*/
+
 var url = window.location.href;
 url = url.replace("https://www.reddit.com/r/","");
 url = url.slice(0, url.indexOf("/"));
+
+/*
+** Call API and load up JSON fule into array
+*/
 
 var apiurl = 'https://shit-taste.net/api/commentfacescall.php?sub='+url;
 var commentfaces = [];
@@ -20,6 +28,10 @@ request.send();
 
 var filteredFaces = [];
 
+/*
+** Preparing the Commentface Menu
+*/
+
 var menu = '<div style="" class="md"><form action="" class="commentfaces"><input type="text" class="commentfacesearch" style="padding: 4px;margin-bottom: 5px;border: 2px solid lightgrey;border-radius: 5px;color: grey;" placeholder="search commentfaces">';
 menu += '<input type="text" class="commentfacetext texttop" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Toptext">';
 menu += '<input type="text" class="commentfacetext textbottom" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Bottomtext">';
@@ -27,13 +39,39 @@ menu += '<input type="text" class="commentfacetext texthover" style="padding: 4p
 menu += '<div class="commentfacewrapper" style="height:150px;display:none;overflow-hidden;">';
 menu += '<div class="commentfacecontainer" style="width:100%;height:100%;overflow-y:scroll;padding-right:17px;box-sizing:content-box;"></div></div></form></div>';
 
+/*
+** Create Commentface Input on initialy reply to thread reply field
+*/
+
+var form = $(".commentarea").children("form");
+form.prepend( menu );
+createCommentfacefield(form);
+
+/*
+** Create Commentface Input Field on Click at the container of the Click
+*/
+
 var replyButton = document.getElementsByClassName("reply-button");
 
 for(var i = 0; i < replyButton.length; i++){
   replyButton[i].addEventListener('click', function(){
+
     var form = $( this ).parents(".entry").siblings(".child").children('form');
+
+    /*
+    ** Remove Copy from initial reply field and clear commentfield
+    */
+
+    form.children(".md").remove();
+    form.children(".usertext-edit").children(".md").children("textarea").val('');
+
+    /*
+    ** Add new field
+    */
+
     form.prepend( menu );
     createCommentfacefield(form);
+
   });
 }
 
@@ -44,6 +82,10 @@ function createCommentfacefield(form) {
 
   for(var j = 0; j < classnamesearch.length; j++) {
 
+    /*
+    * When typing in the search bar, show fitting commentfaces
+    */
+
     classnamesearch[j].addEventListener('keyup', function() {
 
       if(this.value.length > 1) {
@@ -53,6 +95,9 @@ function createCommentfacefield(form) {
         $(this).siblings(".commentfacewrapper").css("display","inherit");
 
         filteredFaces.forEach(function(filteredFace) {
+          /*
+          ** Distinction between subs necessary since the css build differs
+          */
           if(url == "manga") {
             result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
           }
@@ -64,11 +109,34 @@ function createCommentfacefield(form) {
         $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
         for (var i = 0; i < classname.length; i++) {
+            /*
+            ** Setting up actions on Clicking the Dummy Commentfaces
+            */
+
             classname[i].addEventListener('click', function() {
 
+              /*
+              ** Get href from clickedCommentface to set it into the textarea
+              */
+
               var commentcode = this.getAttribute("href");
-              var output = '[]('+commentcode+')';
+              var commentfacetext = this.innerHTML;
+              commentfacetext = commentfacetext.replace("<strong>","**");
+              commentfacetext = commentfacetext.replace("</strong>","**");
+              if (this.title != "") {
+                var commentfacetexthover = " '" + this.title + "'";
+              }
+              else {
+                var commentfacetexthover = "";
+              }
+              var output = '['+commentfacetext+']('+commentcode+commentfacetexthover+')';
+
+              /*
+              ** Get texarea to insert to
+              */
+
               var formfield = $(this).parents(".commentfacecontainer").parents(".commentfacewrapper").parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
+
               var cursorposition = formfield.prop("selectionStart");
               var formfieldcontent = formfield.val();
 
@@ -98,6 +166,10 @@ function createCommentfacefield(form) {
     });
 
   }
+
+  /*
+  ** Set the Commentface text on input on the dummy commentfaces
+  */
 
   var commentfacetext = document.getElementsByClassName("commentfacetext");
 
