@@ -24,22 +24,17 @@ var menu = '<div style="" class="md"><form action="" class="commentfaces"><input
 menu += '<div class="commentfacewrapper" style="height:150px;display:none;overflow-hidden;">';
 menu += '<div class="commentfacecontainer" style="width:100%;height:100%;overflow-y:scroll;padding-right:17px;box-sizing:content-box;"></div></div></form></div>';
 
-
-
 var replyButton = document.getElementsByClassName("reply-button");
 
 for(var i = 0; i < replyButton.length; i++){
   replyButton[i].addEventListener('click', function(){
     var form = $( this ).parents(".entry").siblings(".child").children('form');
-    console.log( form );
     form.prepend( menu );
-    /*createCommentfacefield(form) {
-
-    }*/
+    createCommentfacefield(form);
   });
 }
 
-/*function createCommentfacefield(form) {
+function createCommentfacefield(form) {
 
   var classname = document.getElementsByClassName("addCommentface");
   var classnamesearch = document.getElementsByClassName("commentfacesearch");
@@ -70,8 +65,28 @@ for(var i = 0; i < replyButton.length; i++){
 
               var commentcode = this.getAttribute("href");
               var output = '[]('+commentcode+')';
-              $(this).parents(".md").siblings(".md").children("textarea").val($('textarea').val()+output);
-              console.log($(this).parents(".md").siblings(".md").children("textarea"));
+              var formfield = $(this).parents(".commentfacecontainer").parents(".commentfacewrapper").parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
+              var cursorposition = formfield.prop("selectionStart");
+              var formfieldcontent = formfield.val();
+
+              if(cursorposition == "undefined") {
+                formfield.val(formfield.val() + output);
+              }
+              else {
+                if(formfieldcontent.length > 0) {
+
+                  var formfieldbefore = formfieldcontent.substr(0,cursorposition);
+                  var formfieldafter = formfieldcontent.substr(cursorposition,formfieldcontent.length - 1 )
+                  formfield.val(formfieldbefore + output + formfieldafter);
+
+                }
+                else {
+
+                  formfield.val(output);
+
+                }
+
+              }
 
             }, false);
         }
@@ -81,4 +96,4 @@ for(var i = 0; i < replyButton.length; i++){
 
   }
 
-}*/
+}
