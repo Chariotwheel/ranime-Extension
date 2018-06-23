@@ -200,7 +200,7 @@ function createCommentfacefield(form) {
         }
         else if(inputclass == "textbottom") {
           var strong = facecontent.replace(/<strong>.*<\/strong>/g,"");
-          $( this ).html(strong + " <strong>"+inputvalue+"</strong>");
+          $( this ).html(strong + "<strong>"+inputvalue+"</strong>");
         }
         else if(inputclass == "texthover") {
           $( this ).attr("title",inputvalue);
@@ -211,6 +211,7 @@ function createCommentfacefield(form) {
 
   /*
   ** Browse Commentfaces
+  ** Note: The whole filtering should be put into it's own function. At this point I got the same code twice
   */
 
   var showallcommentfaces = document.getElementsByClassName("showallcommentfaces");
