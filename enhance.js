@@ -230,7 +230,7 @@ function createCommentfacefield(form) {
             result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
           }
           else if(url == "anime") {
-            result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" rel=\"nofollow\"></a>";
+            result += "<a href=\"#"+filteredFace+"\" style=\"display: inline-block;position: relative;\" class=\"addCommentface\" data-href-url=\"#"+filteredFace+"\" rel=\"nofollow\"></a>";
           }
         });
 
@@ -247,14 +247,20 @@ function createCommentfacefield(form) {
 
 }
 
+function addClickEvent(e) {
 
-function addClickEvent() {
+  e.preventDefault();
 
   /*
   ** Get href from clickedCommentface to set it into the textarea
   */
 
   var commentcode = this.getAttribute("href");
+  if(commentcode.includes("https")){
+      var raute = commentcode.indexOf("#");
+      commentcode = commentcode.substr(raute, commentcode.length - 1);
+      this.setAttribute("href", commentcode);
+  }
   var commentfacetext = this.innerHTML;
   commentfacetext = commentfacetext.replace("<strong>","**");
   commentfacetext = commentfacetext.replace("</strong>","**");
@@ -293,5 +299,4 @@ function addClickEvent() {
     }
 
   }
-
 }
