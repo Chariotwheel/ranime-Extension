@@ -75,6 +75,57 @@ for(var i = 0; i < replyButton.length; i++){
   });
 }
 
+/*
+** Clicking on Edit Button
+*/
+
+var editButton = document.getElementsByClassName("edit-usertext");
+
+for(var i = 0; i < editButton.length; i++){
+  editButton[i].addEventListener('click', function(){
+
+    var form = $( this ).parents(".entry").children('form');
+
+    /*
+    ** Remove Copy from initial reply field and clear commentfield
+    */
+
+    form.children(".md").remove();
+
+    /*
+    ** Add new field
+    */
+
+    form.prepend( menu );
+    createCommentfacefield(form);
+
+  });
+}
+
+/*
+** Remove Edit Commentfacefield on Cancel or Submit
+*/
+
+var cancelButton = document.getElementsByClassName("cancel");
+
+for(var i = 0; i < cancelButton.length; i++){
+    cancelButton[i].addEventListener('click', function(){
+        $( this ).parents("form").children(".md").remove();
+    });
+}
+
+var saveButton = document.getElementsByClassName("save");
+
+for(var i = 0; i < saveButton.length; i++){
+    saveButton[i].addEventListener('click', function(){
+        $( this ).parents("form").children(".md").remove();
+    });
+}
+
+/*
+**
+*/
+
 function createCommentfacefield(form) {
 
   var classname = document.getElementsByClassName("addCommentface");
