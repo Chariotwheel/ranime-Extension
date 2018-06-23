@@ -32,7 +32,9 @@ var filteredFaces = [];
 ** Preparing the Commentface Menu
 */
 
-var menu = '<div style="" class="md"><form action="" class="commentfaces"><input type="text" class="commentfacesearch" style="padding: 4px;margin-bottom: 5px;border: 2px solid lightgrey;border-radius: 5px;color: grey;" placeholder="search commentfaces">';
+var menu = '<div style="" class="md"><form action="" class="commentfaces">';
+menu += '<a style="border-radius: 5px;padding:4px;border:2px solid lightgrey;cursor:default;" class="showallcommentfaces">Browse Faces</a>';
+menu += '<input type="text" class="commentfacesearch" style="padding: 4px;margin-bottom: 5px;border: 2px solid lightgrey;border-radius: 5px;color: grey;" placeholder="search commentfaces">';
 menu += '<input type="text" class="commentfacetext texttop" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Toptext">';
 menu += '<input type="text" class="commentfacetext textbottom" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Bottomtext">';
 menu += '<input type="text" class="commentfacetext texthover" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Hovertext">';
@@ -205,6 +207,41 @@ function createCommentfacefield(form) {
         }
       });
     });
+  }
+
+  /*
+  ** Browse Commentfaces
+  */
+
+  var showallcommentfaces = document.getElementsByClassName("showallcommentfaces");
+
+  for(var i = 0; i < showallcommentfaces.length; i++){
+      showallcommentfaces[i].addEventListener('click', function(){
+        var result = "";
+        filteredFaces = commentfaces;
+        $(this).siblings(".commentfacewrapper").css("display","inherit");
+
+        filteredFaces.forEach(function(filteredFace) {
+          /*
+          ** Distinction between subs necessary since the css build differs
+          */
+          if(url == "manga") {
+            result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
+          }
+          else if(url == "anime") {
+            result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" rel=\"nofollow\"></a>";
+          }
+        });
+
+        $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+
+        for (var i = 0; i < classname.length; i++) {
+            /*
+            ** Setting up actions on Clicking the Dummy Commentfaces
+            */
+            classname[i].addEventListener('click', addClickEvent, false);
+        }
+      });
   }
 
 }
