@@ -155,7 +155,7 @@ function createCommentfacefield(form) {
             result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
           }
           else if(url == "anime") {
-            result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" rel=\"nofollow\"></a>";
+            result += "<a href=\"#"+filteredFace+"\" style=\"display: inline-block;position: relative;\" class=\"addCommentface\" rel=\"nofollow\"></a>";
           }
         });
 
@@ -288,7 +288,7 @@ function addClickEvent(e) {
     if(formfieldcontent.length > 0) {
 
       var formfieldbefore = formfieldcontent.substr(0,cursorposition);
-      var formfieldafter = formfieldcontent.substr(cursorposition,formfieldcontent.length - 1 )
+      var formfieldafter = formfieldcontent.substr(cursorposition,formfieldcontent.length )
       formfield.val(formfieldbefore + output + formfieldafter);
 
     }
