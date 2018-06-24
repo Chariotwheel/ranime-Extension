@@ -38,7 +38,7 @@ menu += '<input type="text" class="commentfacesearch" placeholder="search commen
 menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
 menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bottomtext">';
 menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
-menu += '<input type="text" class="aniListSearch" placeholder="Search Anime">';
+menu += '<input type="text" class="aniListSearch" placeholder="Search AniList">';
 menu += '<div class="commentfacewrapper">';
 menu += '<div class="commentfacecontainer"></div></div></form></div>';
 
@@ -299,6 +299,11 @@ function addClickEvent(e) {
 
   var formfield = $(this).parents(".commentfacecontainer").parents(".commentfacewrapper").parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
 
+  insertOutput(output,formfield);
+
+}
+
+function insertOutput(output, formfield) {
   var cursorposition = formfield.prop("selectionStart");
   var formfieldcontent = formfield.val();
 
@@ -318,6 +323,7 @@ function addClickEvent(e) {
       formfield.val(output);
 
     }
+    formfield.focus();
 
   }
 }
@@ -390,13 +396,24 @@ function searchOnAniList(searchterm, targetelement) {
             var id = data.data.Page.media[i].id;
             var coverimage = data.data.Page.media[i].coverImage.medium;
             var type = data.data.Page.media[i].type;
-            result += '<tr><td><img class="anilistsearchimg" src="'+coverimage+'"></td>';
+            var mdma = '['+name+'](https://anilist.co/anime/'+id+'/)';
+            result += '<tr><td><img class="anilistsearchimg" data="'+mdma+'" src="'+coverimage+'"></td>';
             result += '<td><a href="https://anilist.co/anime/'+id+'/">'+name+'</a></td><td>'+type.toLowerCase()+'</td></tr>';
-            //result += '['+name+'](https://anilist.co/anime/'+id+'/)';
           }
           result += '</table>';
           targetelement.siblings(".commentfacewrapper").css("display","inherit");
           targetelement.siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+
+          var anilistsearchimg = document.getElementsByClassName("anilistsearchimg");
+
+          for(var i = 0; i < anilistsearchimg.length; i++){
+              anilistsearchimg[i].addEventListener('click', function(){
+                  output = $(this).attr("data");
+                  var formfield = $(this).parents("td").parents("tr").parents("tbody").parents("table").parents(".commentfacecontainer").parents(".commentfacewrapper").parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
+                  insertOutput(output,formfield);
+              });
+          }
+
      }
 
     function handleError(error) {
