@@ -292,6 +292,7 @@ function addClickEvent(e) {
     var commentfacetexthover = "";
   }
   var output = '['+commentfacetext+']('+commentcode+commentfacetexthover+')';
+  output = output.replace("****","");
 
   /*
   ** Get texarea to insert to
