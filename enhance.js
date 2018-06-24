@@ -356,6 +356,7 @@ function searchOnAniList(searchterm, targetelement) {
             medium
           }
           type
+          format
         }
       }
     }
@@ -396,9 +397,10 @@ function searchOnAniList(searchterm, targetelement) {
             var id = data.data.Page.media[i].id;
             var coverimage = data.data.Page.media[i].coverImage.medium;
             var type = data.data.Page.media[i].type;
-            var mdma = '['+name+'](https://anilist.co/anime/'+id+'/)';
+            var format = data.data.Page.media[i].format;
+            var mdma = '['+name+'](https://anilist.co/'+type.toLowerCase()+'/'+id+'/)';
             result += '<tr><td><img class="anilistsearchimg" data="'+mdma+'" src="'+coverimage+'"></td>';
-            result += '<td><a href="https://anilist.co/anime/'+id+'/">'+name+'</a></td><td>'+type.toLowerCase()+'</td></tr>';
+            result += '<td><a href="https://anilist.co/'+type.toLowerCase()+'/'+id+'/">'+name+'</a></td><td>'+format.replace("_"," ").toLowerCase()+'</td></tr>';
           }
           result += '</table>';
           targetelement.siblings(".commentfacewrapper").css("display","inherit");
