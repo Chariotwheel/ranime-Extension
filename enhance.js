@@ -32,15 +32,15 @@ var filteredFaces = [];
 ** Preparing the Commentface Menu
 */
 
-var menu = '<div style="" class="md"><form action="" class="commentfaces">';
-menu += '<a style="border-radius: 5px;padding:4px;border:2px solid lightgrey;cursor:default;" class="showallcommentfaces">Browse Faces</a>';
-menu += '<input type="text" class="commentfacesearch" style="padding: 4px;margin-bottom: 5px;border: 2px solid lightgrey;border-radius: 5px;color: grey;" placeholder="search commentfaces">';
-menu += '<input type="text" class="commentfacetext texttop" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Toptext">';
-menu += '<input type="text" class="commentfacetext textbottom" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Bottomtext">';
-menu += '<input type="text" class="commentfacetext texthover" style="padding: 4px;margin-bottom: 5px;border: 2px dashed lightgrey;border-radius: 5px;color: grey;" placeholder="Hovertext">';
-menu += '<input type="text" class="aniListSearch" style="padding: 4px;margin-bottom: 5px;border: 2px solid lightgrey;border-radius: 5px;color: grey;" placeholder="Search Anime">';
-menu += '<div class="commentfacewrapper" style="height:150px;display:none;overflow-hidden;">';
-menu += '<div class="commentfacecontainer" style="width:100%;height:100%;overflow-y:scroll;padding-right:17px;box-sizing:content-box;"></div></div></form></div>';
+var menu = '<div class="md ranimeenhanced"><form action="" class="commentfaces">';
+menu += '<a class="showallcommentfaces">Browse Faces</a>';
+menu += '<input type="text" class="commentfacesearch" placeholder="search commentfaces">';
+menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
+menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bottomtext">';
+menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
+menu += '<input type="text" class="aniListSearch" placeholder="Search Anime">';
+menu += '<div class="commentfacewrapper">';
+menu += '<div class="commentfacecontainer"></div></div></form></div>';
 
 /*
 ** Create Commentface Input on initialy reply to thread reply field
@@ -156,7 +156,7 @@ function createCommentfacefield(form) {
             result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
           }
           else if(url == "anime") {
-            result += "<a href=\"#"+filteredFace+"\" style=\"display: inline-block;position: relative;\" class=\"addCommentface\" rel=\"nofollow\"></a>";
+            result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" rel=\"nofollow\"></a>";
           }
         });
 
@@ -231,7 +231,7 @@ function createCommentfacefield(form) {
             result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
           }
           else if(url == "anime") {
-            result += "<a href=\"#"+filteredFace+"\" style=\"display: inline-block;position: relative;\" class=\"addCommentface\" data-href-url=\"#"+filteredFace+"\" rel=\"nofollow\"></a>";
+            result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"#"+filteredFace+"\" rel=\"nofollow\"></a>";
           }
         });
 
@@ -244,6 +244,26 @@ function createCommentfacefield(form) {
             classname[i].addEventListener('click', addClickEvent, false);
         }
       });
+  }
+
+  /*
+  ** Setup AniList Search
+  */
+
+  var aniListSearch = document.getElementsByClassName("aniListSearch");
+
+  for(var i = 0; i < aniListSearch.length; i++){
+
+      aniListSearch[i].addEventListener('keyup', function(e){
+        if(e.keyCode == 13) {
+            var query = $( this ).val();
+            searchOnAniList(query, $( this ));
+            //  var d = data.data.title.romaji;
+            //$( this ).siblings(".commentfacewrapper").css("display","inherit");
+            //$( this ).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+        }
+      });
+
   }
 
 }
@@ -312,7 +332,7 @@ function addClickEvent(e) {
 ** Api Query Call
 */
 
-function searchOnAniList(searchterm)  {
+function searchOnAniList(searchterm, targetelement)  {
 
     // Here we define our query as a multi-line string
     // Storing it in a separate .graphql/.gql file is also possible
@@ -360,12 +380,17 @@ function searchOnAniList(searchterm)  {
     }
 
     function handleData(data) {
-        console.log(data);
+        //console.log(data);
+        var name = data.data.Media.title.romaji;
+        var id = data.data.Media.id;
+        var result = '<img class="anilistsearchimg" src="https://cdn.anilist.co/img/dir/anime/reg/'+id+'.jpg"><a href="https://anilist.co/anime/'+id+'/">'+name+'</a>';
+        result += '['+name+'](https://anilist.co/anime/'+id+'/)';
+        targetelement.siblings(".commentfacewrapper").css("display","inherit");
+        targetelement.siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
     }
 
     function handleError(error) {
         //alert('Error, check console');
         console.error(error);
     }
-
 }

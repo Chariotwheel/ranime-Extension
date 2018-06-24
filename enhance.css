@@ -1,0 +1,41 @@
+.ranimeenhanced input {
+  padding: 4px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  color: grey;
+}
+.showallcommentfaces {
+  border-radius: 5px;
+  padding:4px;
+  border: 2px solid lightgrey;
+  cursor:default;
+  color:grey !important;
+}
+.showallcommentfaces:hover {
+  color:darkgrey !important;
+}
+.commentfacetext {
+  border: 2px dashed lightgrey;
+}
+.commentfacesearch, .aniListSearch {
+  border: 2px solid lightgrey;
+}
+.commentfacewrapper {
+  height:150px;
+  display:none;
+  overflow:hidden;
+}
+.commentfacecontainer {
+  width:100%;
+  height:100%;
+  overflow-y:scroll;
+  padding-right:17px;
+  box-sizing:content-box;
+}
+.addCommentface {
+  display: inline-block;
+  position: relative;
+}
+.anilistsearchimg {
+  width:70px;
+}

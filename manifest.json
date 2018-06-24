@@ -21,6 +21,9 @@
       "js": [
         "jquery-3.3.1.min.js",
         "enhance.js"
+      ],
+      "css": [
+        "enhance.css"
       ]
     }
   ]
