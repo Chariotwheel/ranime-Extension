@@ -326,71 +326,80 @@ function addClickEvent(e) {
 ** Anilist API
 */
 
-
-
 /*
 ** Api Query Call
 */
 
-function searchOnAniList(searchterm, targetelement)  {
-
-    // Here we define our query as a multi-line string
-    // Storing it in a separate .graphql/.gql file is also possible
+function searchOnAniList(searchterm, targetelement) {
     var query = `
-    query ($search: String) { # Define which variables will be used in the query (id)
-      Media (search: $search, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
-        id
-        title {
-          romaji
-          english
-          native
+    query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+      Page (page: $page, perPage: $perPage) {
+        pageInfo {
+          total
+          currentPage
+          lastPage
+          hasNextPage
+          perPage
+        }
+        media (id: $id, search: $search) {
+          id
+          title {
+            romaji
+          }
+          coverImage {
+            medium
+          }
+          type
         }
       }
     }
     `;
 
-    // Define our query variables and values that will be used in the query request
     var variables = {
-        search: searchterm
+        search: searchterm,
+        page: 1,
+        perPage: 12
     };
 
-    // Define the config we'll need for our Api request
     var url = 'https://graphql.anilist.co',
-        options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                query: query,
-                variables: variables
-            })
-        };
+    options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+            query: query,
+            variables: variables
+        })
+    };
 
-    // Make the HTTP Api request
     fetch(url, options).then(handleResponse)
                        .then(handleData)
                        .catch(handleError);
-
-    function handleResponse(response) {
-        return response.json().then(function (json) {
-            return response.ok ? json : Promise.reject(json);
-        });
-    }
+                       function handleResponse(response) {
+                           return response.json().then(function (json) {
+                               return response.ok ? json : Promise.reject(json);
+                           });
+                       }
 
     function handleData(data) {
-        //console.log(data);
-        var name = data.data.Media.title.romaji;
-        var id = data.data.Media.id;
-        var result = '<img class="anilistsearchimg" src="https://cdn.anilist.co/img/dir/anime/reg/'+id+'.jpg"><a href="https://anilist.co/anime/'+id+'/">'+name+'</a>';
-        result += '['+name+'](https://anilist.co/anime/'+id+'/)';
-        targetelement.siblings(".commentfacewrapper").css("display","inherit");
-        targetelement.siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
-    }
+        var result = '<table class="browseAniListtable">';
+        for(var i = 0; i < data.data.Page.media.length; i++) {
+            var name = data.data.Page.media[i].title.romaji;
+            var id = data.data.Page.media[i].id;
+            var coverimage = data.data.Page.media[i].coverImage.medium;
+            var type = data.data.Page.media[i].type;
+            result += '<tr><td><img class="anilistsearchimg" src="'+coverimage+'"></td>';
+            result += '<td><a href="https://anilist.co/anime/'+id+'/">'+name+'</a></td><td>'+type.toLowerCase()+'</td></tr>';
+            //result += '['+name+'](https://anilist.co/anime/'+id+'/)';
+          }
+          result += '</table>';
+          targetelement.siblings(".commentfacewrapper").css("display","inherit");
+          targetelement.siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+     }
 
     function handleError(error) {
-        //alert('Error, check console');
-        console.error(error);
+        //console.error(error);
     }
 }

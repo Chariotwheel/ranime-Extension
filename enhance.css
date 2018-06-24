@@ -21,7 +21,7 @@
   border: 2px solid lightgrey;
 }
 .commentfacewrapper {
-  height:150px;
+  height:250px;
   display:none;
   overflow:hidden;
 }
@@ -37,5 +37,17 @@
   position: relative;
 }
 .anilistsearchimg {
-  width:70px;
+  width:80px;
+}
+.browseAniListtable {
+  width:100%;
+}
+.browseAniListtable tr:nth-child(even) {
+  background:Ivory;
+}
+.browseAniListtable tr:nth-child(odd) {
+  background:Azure;
+}
+.browseAniListtable  td {
+   text-align:center;
 }
