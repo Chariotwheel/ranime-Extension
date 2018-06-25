@@ -42,6 +42,7 @@ menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bott
 menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
 menu += '<input type="text" class="aniListSearch" placeholder="Search Media">';
 menu += '<input type="text" class="aniListSearchStaff" placeholder="Search Staff">';
+menu += '<input type="text" class="aniListSearchStudios" placeholder="Search Studios">';
 menu += '<div class="commentfacewrapper">';
 menu += '<div class="commentfacecontainer"></div></div></form></div>';
 
@@ -321,6 +322,19 @@ function createCommentfacefield(form) {
 
   }
 
+  var aniListSearchStudios = document.getElementsByClassName("aniListSearchStudios");
+
+  for(var i = 0; i < aniListSearchStudios.length; i++){
+
+      aniListSearchStudios[i].addEventListener('keyup', function(e){
+        if(e.keyCode == 13) {
+            var query = $( this ).val();
+            searchOnAniList(query, $( this ), "studios");
+        }
+      });
+
+  }
+
 }
 
 /*
@@ -473,6 +487,25 @@ function searchOnAniList(searchterm, targetelement, field) {
     }
     `;
   }
+  else if(topic == "studios") {
+    var query = `
+    query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+      Page (page: $page, perPage: $perPage) {
+        pageInfo {
+          total
+          currentPage
+          lastPage
+          hasNextPage
+          perPage
+        }
+        studios (id: $id, search: $search) {
+          id
+          name
+        }
+      }
+    }
+    `;
+  }
     var variables = {
         search: searchterm,
         page: 1,
@@ -534,6 +567,18 @@ function searchOnAniList(searchterm, targetelement, field) {
           for(var i=0; i < sorttable.length;i++) {
             result += '<tr><td><img class="anilistsearchimg" data="'+sorttable[i][3]+'" src="'+sorttable[i][2]+'"></td>';
             result += '<td><a href="https://anilist.co/staff/'+sorttable[i][4]+'/" target="_blank">'+sorttable[i][0]+' '+sorttable[i][1]+'</a></td></tr>';
+          }
+        }
+        else if(topic == "studios"){
+          for(var i = 0; i < data.data.Page.studios.length; i++) {
+              var id = data.data.Page.studios[i].id;
+              var name = data.data.Page.studios[i].name;
+              var mdma = '['+name+'](https://anilist.co/studio/'+id+'/)';
+              sorttable.push([name,mdma,id]);
+            }
+          for(var i=0; i < sorttable.length;i++) {
+            result += '<tr><td><span class="anilistsearchimg" data="'+sorttable[i][1]+'">Add to Comment</span></td>';
+            result += '<td><a href="https://anilist.co/studio/'+sorttable[i][2]+'/" target="_blank">'+sorttable[i][0]+'</a></td></tr>';
           }
         }
           result += '</table>';
