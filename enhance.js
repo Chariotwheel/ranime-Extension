@@ -33,7 +33,8 @@ var filteredFaces = [];
 */
 
 var menu = '<div class="md ranimeenhanced"><form action="" class="commentfaces">';
-menu += '<a class="showrecentcommentfaces">Recent Faces</a>';
+menu += '<a class="showrecentcommentfaces">🕐</a>';
+menu += '<a class="showrecentfavouritefaces">♥</a>';
 menu += '<a class="showallcommentfaces">Browse Faces</a>';
 menu += '<input type="text" class="commentfacesearch" placeholder="search commentfaces">';
 menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
@@ -150,16 +151,12 @@ function createCommentfacefield(form) {
         let filteredFaces = commentfaces.filter(x => x.toLowerCase().includes(this.value));
         $(this).siblings(".commentfacewrapper").css("display","inherit");
 
+        var texttop = $(this).siblings(".texttop:first").val();
+        var textbottom = $(this).siblings(".textbottom:first").val();
+        var texthover = $(this).siblings(".texthover:first").val();
+
         filteredFaces.forEach(function(filteredFace) {
-          /*
-          ** Distinction between subs necessary since the css build differs
-          */
-          if(url == "manga") {
-            result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
-          }
-          else if(url == "anime") {
-            result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" rel=\"nofollow\"></a>";
-          }
+              result += generateCommentfaces(filteredFace,texttop, textbottom, texthover);
         });
 
         $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
@@ -222,19 +219,18 @@ function createCommentfacefield(form) {
   for(var i = 0; i < showallcommentfaces.length; i++){
       showallcommentfaces[i].addEventListener('click', function(){
         var result = "";
-        filteredFaces = commentfaces;
         $(this).siblings(".commentfacewrapper").css("display","inherit");
 
-        filteredFaces.forEach(function(filteredFace) {
+        var texttop = $(this).siblings(".texttop:first").val();
+        var textbottom = $(this).siblings(".textbottom:first").val();
+        var texthover = $(this).siblings(".texthover:first").val();
+
+        commentfaces.forEach(function(filteredFace) {
           /*
           ** Distinction between subs necessary since the css build differs
           */
-          if(url == "manga") {
-            result += "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"//#"+filteredFace+"\"></a>";
-          }
-          else if(url == "anime") {
-            result += "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" data-href-url=\"#"+filteredFace+"\" rel=\"nofollow\"></a>";
-          }
+          result += generateCommentfaces(filteredFace,texttop, textbottom, texthover);
+
         });
 
         $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
@@ -248,6 +244,19 @@ function createCommentfacefield(form) {
       });
   }
 
+  function generateCommentfaces(filteredFace, texttop, textbottom, texthover) {
+    var inner = texttop;
+    if(typeof textbottom !== 'undefined'){
+      inner += "<strong>"+textbottom+"</strong>";
+    }
+    if(url == "manga") {
+      return "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" title=\""+texthover+"\" data-href-url=\"//#"+filteredFace+"\">"+inner+"</a>";
+    }
+    else if(url == "anime") {
+      return "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" title=\""+texthover+"\" data-href-url=\"#"+filteredFace+"\" rel=\"nofollow\">"+inner+"</a>";
+    }
+  }
+
   /*
   ** Shows the ten recently used Commentfaces
   */
@@ -258,17 +267,18 @@ function createCommentfacefield(form) {
       showrecentcommentfaces[i].addEventListener('click', function(){
           var result = "";
           $(this).siblings(".commentfacewrapper").css("display","inherit");
+
           var storageItemList = localStorage.getItem('recent');
           storageItemList = storageItemList.replace("#","");
           storageItemList = storageItemList.split(",");
           storageItemList = storageItemList.reverse();
+
+          var texttop = $(this).siblings(".texttop:first").val();
+          var textbottom = $(this).siblings(".textbottom:first").val();
+          var texthover = $(this).siblings(".texthover:first").val();
+
           storageItemList.forEach(function(itemList) {
-              if(url == "manga") {
-                result += "<a href=\"//#"+itemList+"\" class=\"addCommentface\" data-href-url=\"//#"+itemList+"\"></a>";
-              }
-              else if(url == "anime") {
-                result += "<a href=\"#"+itemList+"\" class=\"addCommentface\" data-href-url=\"#"+itemList+"\" rel=\"nofollow\"></a>";
-              }
+              result += generateCommentfaces(itemList,texttop, textbottom, texthover);
           });
           $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
