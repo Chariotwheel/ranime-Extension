@@ -40,9 +40,10 @@ menu += '<input type="text" class="commentfacesearch" placeholder="search commen
 menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
 menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bottomtext">';
 menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
-menu += '<input type="text" class="aniListSearch" placeholder="Search Media">';
-menu += '<input type="text" class="aniListSearchStaff" placeholder="Search Staff">';
-menu += '<input type="text" class="aniListSearchStudios" placeholder="Search Studios">';
+menu += '<input type="text" class="aniListSearch anilist" placeholder="Search Media">';
+menu += '<input type="text" class="aniListSearchCharacters anilist" placeholder="Search Characters">';
+menu += '<input type="text" class="aniListSearchStaff anilist" placeholder="Search Staff">';
+menu += '<input type="text" class="aniListSearchStudios anilist" placeholder="Search Studios">';
 menu += '<div class="commentfacewrapper">';
 menu += '<div class="commentfacecontainer"></div></div></form></div>';
 
@@ -335,6 +336,19 @@ function createCommentfacefield(form) {
 
   }
 
+  var aniListSearchCharacters = document.getElementsByClassName("aniListSearchCharacters");
+
+  for(var i = 0; i < aniListSearchCharacters.length; i++){
+
+      aniListSearchCharacters[i].addEventListener('keyup', function(e){
+        if(e.keyCode == 13) {
+            var query = $( this ).val();
+            searchOnAniList(query, $( this ), "characters");
+        }
+      });
+
+  }
+
 }
 
 /*
@@ -506,6 +520,31 @@ function searchOnAniList(searchterm, targetelement, field) {
     }
     `;
   }
+  else if(topic == "characters") {
+    var query = `
+    query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+      Page (page: $page, perPage: $perPage) {
+        pageInfo {
+          total
+          currentPage
+          lastPage
+          hasNextPage
+          perPage
+        }
+        characters (id: $id, search: $search) {
+          id
+          name {
+            first
+            last
+          }
+          image {
+            medium
+          }
+        }
+      }
+    }
+    `;
+  }
     var variables = {
         search: searchterm,
         page: 1,
@@ -579,6 +618,26 @@ function searchOnAniList(searchterm, targetelement, field) {
           for(var i=0; i < sorttable.length;i++) {
             result += '<tr><td><span class="anilistsearchimg" data="'+sorttable[i][1]+'">Add to Comment</span></td>';
             result += '<td><a href="https://anilist.co/studio/'+sorttable[i][2]+'/" target="_blank">'+sorttable[i][0]+'</a></td></tr>';
+          }
+        }
+        else if(topic == "characters"){
+          for(var i = 0; i < data.data.Page.characters.length; i++) {
+              var id = data.data.Page.characters[i].id;
+              var firstname = data.data.Page.characters[i].name.first;
+              var lastname = data.data.Page.characters[i].name.last;
+              if(firstname == null) {
+                firstname = "";
+              }
+              if(lastname == null) {
+                lastname = "";
+              }
+              var image = data.data.Page.characters[i].image.medium;
+              var mdma = '['+firstname+' '+lastname+'](https://anilist.co/character/'+id+'/)';
+              sorttable.push([id,firstname,lastname,image,mdma]);
+            }
+          for(var i=0; i < sorttable.length;i++) {
+            result += '<tr><td><img class="anilistsearchimg" data="'+sorttable[i][4]+'" src="'+sorttable[i][3]+'"></td>';
+            result += '<td><a href="https://anilist.co/studio/'+sorttable[i][0]+'/" target="_blank">'+sorttable[i][1]+' '+sorttable[i][2]+'</a></td></tr>';
           }
         }
           result += '</table>';

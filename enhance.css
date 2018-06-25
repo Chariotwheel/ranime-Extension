@@ -20,7 +20,7 @@
 .commentfacetext {
   border: 2px dashed lightgrey;
 }
-.commentfacesearch, .aniListSearch, .aniListSearchStaff, .aniListSearchStudios {
+.commentfacesearch, .anilist {
   border: 2px solid lightgrey;
 }
 .commentfacewrapper {
