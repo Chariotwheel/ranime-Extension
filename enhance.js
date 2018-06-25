@@ -44,6 +44,7 @@ menu += '<input type="text" class="aniListSearch anilist" placeholder="Search Me
 menu += '<input type="text" class="aniListSearchCharacters anilist" placeholder="Search Characters">';
 menu += '<input type="text" class="aniListSearchStaff anilist" placeholder="Search Staff">';
 menu += '<input type="text" class="aniListSearchStudios anilist" placeholder="Search Studios">';
+menu += '<br/><a class="addSpoiler">Spoiler</a>';
 menu += '<div class="commentfacewrapper">';
 menu += '<div class="commentfacecontainer"></div></div></form></div>';
 
@@ -349,6 +350,35 @@ function createCommentfacefield(form) {
 
   }
 
+  /*
+  ** Text functions
+  */
+
+  var addSpoiler = document.getElementsByClassName("addSpoiler");
+
+  for(var i = 0; i < addSpoiler.length; i++){
+    addSpoiler[i].addEventListener('mousedown', function(e){
+        e.preventDefault();
+        //var marked = window.getSelection().toString();
+        //if(marked == "") {
+        var txtarea = $(this).parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
+        var start = txtarea[0].selectionStart;
+        var finish = txtarea[0].selectionEnd;
+        var sel = txtarea[0].value.substring(start, finish);
+        //}
+
+        if(sel !== "")
+          var output = '[](/s "' + sel + '")';
+        else
+         var output = '[](/s "")';
+
+        var formfieldbefore = txtarea.val().substr(0,start);
+        var formfieldafter = txtarea.val().substr(finish,txtarea.val().length)
+        txtarea.val(formfieldbefore + output + formfieldafter);
+
+        txtarea.focus();
+    });
+  }
 }
 
 /*
@@ -414,6 +444,7 @@ function addClickEvent(e) {
 }
 
 function insertOutput(output, formfield) {
+  
   var cursorposition = formfield.prop("selectionStart");
   var formfieldcontent = formfield.val();
 
@@ -433,6 +464,7 @@ function insertOutput(output, formfield) {
       formfield.val(output);
 
     }
+
     formfield.focus();
 
   }

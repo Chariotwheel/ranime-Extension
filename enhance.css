@@ -4,15 +4,22 @@
   border-radius: 5px;
   color: grey;
 }
-.showallcommentfaces, .showrecentcommentfaces, .showrecentfavouritefaces {
+.showallcommentfaces, .showrecentcommentfaces, .showrecentfavouritefaces, .addSpoiler {
   border-radius: 5px;
   padding:4px;
   border: 2px solid lightgrey;
   cursor:default;
   color:grey !important;
 }
-.showallcommentfaces:hover, .showrecentcommentfaces:hover, .showrecentfavouritefaces:hover {
+.showallcommentfaces:hover, .showrecentcommentfaces:hover, .showrecentfavouritefaces:hover, .addSpoiler:hover {
   color:darkgrey !important;
+}
+.addSpoiler {
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
 }
 .showrecentfavouritefaces {
   color:red !important;
