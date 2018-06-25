@@ -4,20 +4,23 @@
   border-radius: 5px;
   color: grey;
 }
-.showallcommentfaces, .showrecentcommentfaces {
+.showallcommentfaces, .showrecentcommentfaces, .showrecentfavouritefaces {
   border-radius: 5px;
   padding:4px;
   border: 2px solid lightgrey;
   cursor:default;
   color:grey !important;
 }
-.showallcommentfaces:hover, .showrecentcommentfaces:hover {
+.showallcommentfaces:hover, .showrecentcommentfaces:hover, .showrecentfavouritefaces:hover {
   color:darkgrey !important;
+}
+.showrecentfavouritefaces {
+  color:red !important;
 }
 .commentfacetext {
   border: 2px dashed lightgrey;
 }
-.commentfacesearch, .aniListSearch {
+.commentfacesearch, .aniListSearch, .aniListSearchStaff {
   border: 2px solid lightgrey;
 }
 .commentfacewrapper {

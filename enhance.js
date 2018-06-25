@@ -34,13 +34,14 @@ var filteredFaces = [];
 
 var menu = '<div class="md ranimeenhanced"><form action="" class="commentfaces">';
 menu += '<a class="showrecentcommentfaces">🕐</a>';
-menu += '<a class="showrecentfavouritefaces">♥</a>';
+//menu += '<a class="showrecentfavouritefaces">♥</a>';
 menu += '<a class="showallcommentfaces">Browse Faces</a>';
 menu += '<input type="text" class="commentfacesearch" placeholder="search commentfaces">';
 menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
 menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bottomtext">';
 menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
-menu += '<input type="text" class="aniListSearch" placeholder="Search AniList">';
+menu += '<input type="text" class="aniListSearch" placeholder="Search Media">';
+menu += '<input type="text" class="aniListSearchStaff" placeholder="Search Staff">';
 menu += '<div class="commentfacewrapper">';
 menu += '<div class="commentfacecontainer"></div></div></form></div>';
 
@@ -301,7 +302,20 @@ function createCommentfacefield(form) {
       aniListSearch[i].addEventListener('keyup', function(e){
         if(e.keyCode == 13) {
             var query = $( this ).val();
-            searchOnAniList(query, $( this ));
+            searchOnAniList(query, $( this ), "anime");
+        }
+      });
+
+  }
+
+  var aniListSearchStaff = document.getElementsByClassName("aniListSearchStaff");
+
+  for(var i = 0; i < aniListSearchStaff.length; i++){
+
+      aniListSearchStaff[i].addEventListener('keyup', function(e){
+        if(e.keyCode == 13) {
+            var query = $( this ).val();
+            searchOnAniList(query, $( this ), "staff");
         }
       });
 
@@ -404,7 +418,11 @@ function insertOutput(output, formfield) {
 ** Api Query Call
 */
 
-function searchOnAniList(searchterm, targetelement) {
+var topic;
+
+function searchOnAniList(searchterm, targetelement, field) {
+  topic = field;
+  if (topic == "anime") {
     var query = `
     query ($id: Int, $page: Int, $perPage: Int, $search: String) {
       Page (page: $page, perPage: $perPage) {
@@ -429,7 +447,32 @@ function searchOnAniList(searchterm, targetelement) {
       }
     }
     `;
-
+  }
+  else if(topic == "staff") {
+    var query = `
+    query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+      Page (page: $page, perPage: $perPage) {
+        pageInfo {
+          total
+          currentPage
+          lastPage
+          hasNextPage
+          perPage
+        }
+        staff (id: $id, search: $search) {
+          id
+          name {
+            first
+            last
+          }
+          image {
+            medium
+          }
+        }
+      }
+    }
+    `;
+  }
     var variables = {
         search: searchterm,
         page: 1,
@@ -448,7 +491,6 @@ function searchOnAniList(searchterm, targetelement) {
             variables: variables
         })
     };
-
     fetch(url, options).then(handleResponse)
                        .then(handleData)
                        .catch(handleError);
@@ -460,24 +502,40 @@ function searchOnAniList(searchterm, targetelement) {
 
     function handleData(data) {
         var result = '<table class="browseAniListtable">'; var sorttable = [];
-        for(var i = 0; i < data.data.Page.media.length; i++) {
-            var name = data.data.Page.media[i].title.romaji;
-            var id = data.data.Page.media[i].id;
-            var coverimage = data.data.Page.media[i].coverImage.medium;
-            var type = data.data.Page.media[i].type;
-            var format = data.data.Page.media[i].format;
-            var mdma = '['+name+'](https://anilist.co/'+type.toLowerCase()+'/'+id+'/)';
-            sorttable.push([name,id,coverimage,type,format,mdma]);
+        if(topic == "anime") {
+          for(var i = 0; i < data.data.Page.media.length; i++) {
+              var name = data.data.Page.media[i].title.romaji;
+              var id = data.data.Page.media[i].id;
+              var coverimage = data.data.Page.media[i].coverImage.medium;
+              var type = data.data.Page.media[i].type;
+              var format = data.data.Page.media[i].format;
+              var mdma = '['+name+'](https://anilist.co/'+type.toLowerCase()+'/'+id+'/)';
+              sorttable.push([name,id,coverimage,type,format,mdma]);
 
-          }
-          sorttable = sorttable.sort(
-            function(a, b) {
-               return b[4] > a[4];
-          })
+            }
+            sorttable = sorttable.sort(
+              function(a, b) {
+                 return b[4] > a[4];
+            })
           for(var i=0; i < sorttable.length;i++) {
             result += '<tr><td><img class="anilistsearchimg" data="'+sorttable[i][5]+'" src="'+sorttable[i][2]+'"></td>';
-            result += '<td><a href="https://anilist.co/'+sorttable[i][4].toLowerCase()+'/'+sorttable[i][1]+'/">'+sorttable[i][0]+'</a></td><td>'+sorttable[i][4].replace("_"," ").toLowerCase()+'</td></tr>';
+            result += '<td><a href="https://anilist.co/'+sorttable[i][4].toLowerCase()+'/'+sorttable[i][1]+'/" target="_blank">'+sorttable[i][0]+'</a></td><td>'+sorttable[i][4].replace("_"," ").toLowerCase()+'</td></tr>';
           }
+        }
+        else if(topic == "staff") {
+          for(var i = 0; i < data.data.Page.staff.length; i++) {
+              var firstname = data.data.Page.staff[i].name.first;
+              var lastname = data.data.Page.staff[i].name.last;
+              var id = data.data.Page.staff[i].id;
+              var image = data.data.Page.staff[i].image.medium;
+              var mdma = '['+firstname+' '+lastname+'](https://anilist.co/staff/'+id+'/)';
+              sorttable.push([firstname,lastname,image,mdma,id]);
+            }
+          for(var i=0; i < sorttable.length;i++) {
+            result += '<tr><td><img class="anilistsearchimg" data="'+sorttable[i][3]+'" src="'+sorttable[i][2]+'"></td>';
+            result += '<td><a href="https://anilist.co/staff/'+sorttable[i][4]+'/" target="_blank">'+sorttable[i][0]+' '+sorttable[i][1]+'</a></td></tr>';
+          }
+        }
           result += '</table>';
           targetelement.siblings(".commentfacewrapper").css("display","inherit");
           targetelement.siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
