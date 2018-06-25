@@ -8,4 +8,4 @@ This Mozilla Firefox and Google Chrome browser Extension for the subreddits [r/a
 
 [Firefox](https://addons.mozilla.org/en-US/firefox/addon/r-anime-enhanced/)
 
-[Chrome]()
+[Chrome](https://chrome.google.com/webstore/detail/ranime-enhanced/fpgkklfainkaakkgihcfdgeglleogkhc)
