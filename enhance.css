@@ -26,6 +26,7 @@
 }
 .commentfacetext {
   border: 2px dashed lightgrey;
+  width:90px;
 }
 .commentfacesearch, .anilist {
   border: 2px solid lightgrey;
@@ -34,6 +35,7 @@
   height:250px;
   display:none;
   overflow:hidden;
+  margin-top: 10px;
 }
 .commentfacecontainer {
   width:100%;

@@ -40,7 +40,7 @@ menu += '<input type="text" class="commentfacesearch" placeholder="search commen
 menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
 menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bottomtext">';
 menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
-menu += '<input type="text" class="aniListSearch anilist" placeholder="Search Media">';
+menu += '<br /><input type="text" class="aniListSearch anilist" placeholder="Search Media">';
 menu += '<input type="text" class="aniListSearchCharacters anilist" placeholder="Search Characters">';
 menu += '<input type="text" class="aniListSearchStaff anilist" placeholder="Search Staff">';
 menu += '<input type="text" class="aniListSearchStudios anilist" placeholder="Search Studios">';
@@ -149,7 +149,7 @@ function createCommentfacefield(form) {
 
     classnamesearch[j].addEventListener('keyup', function() {
 
-      if(this.value.length > 1) {
+      //if(this.value.length > 1) {
 
         var result = "";
         let filteredFaces = commentfaces.filter(x => x.toLowerCase().includes(this.value));
@@ -172,7 +172,7 @@ function createCommentfacefield(form) {
 
             classname[i].addEventListener('click', addClickEvent, false);
         }
-      }
+      //}
 
     });
 
@@ -272,18 +272,24 @@ function createCommentfacefield(form) {
           var result = "";
           $(this).siblings(".commentfacewrapper").css("display","inherit");
 
-          var storageItemList = localStorage.getItem('recent');
-          storageItemList = storageItemList.replace("#","");
-          storageItemList = storageItemList.split(",");
-          storageItemList = storageItemList.reverse();
-
           var texttop = $(this).siblings(".texttop:first").val();
           var textbottom = $(this).siblings(".textbottom:first").val();
           var texthover = $(this).siblings(".texthover:first").val();
 
-          storageItemList.forEach(function(itemList) {
-              result += generateCommentfaces(itemList,texttop, textbottom, texthover);
-          });
+          var storageItemList = localStorage.getItem('recent');
+          if(storageItemList !== null) {
+            storageItemList = storageItemList.replace("#","");
+            storageItemList = storageItemList.split(",");
+            storageItemList = storageItemList.reverse();
+
+            storageItemList.forEach(function(itemList) {
+                result += generateCommentfaces(itemList,texttop, textbottom, texthover);
+            });
+          }
+
+          if(result == ""){
+            result = "<br />No Commentfaces used recently.";
+          }
           $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
           for (var i = 0; i < classname.length; i++) {
@@ -444,7 +450,7 @@ function addClickEvent(e) {
 }
 
 function insertOutput(output, formfield) {
-  
+
   var cursorposition = formfield.prop("selectionStart");
   var formfieldcontent = formfield.val();
 
