@@ -3,10 +3,11 @@
   "description": "Add functionalities to r/anime",
   "manifest_version": 2,
   "name": "r/anime Enhanced",
-  "version": "1.3",
+  "version": "1.3.2",
   "permissions": [
     "https://shit-taste.net/*",
-    "https://graphql.anilist.co/*"
+    "https://graphql.anilist.co/*",
+    "storage"
   ],
   "homepage_url": "https://github.com/Chariotwheel/ranime-Extension",
   "icons": {

@@ -33,6 +33,7 @@ var filteredFaces = [];
 */
 
 var menu = '<div class="md ranimeenhanced"><form action="" class="commentfaces">';
+menu += '<a class="showrecentcommentfaces">Recent Faces</a>';
 menu += '<a class="showallcommentfaces">Browse Faces</a>';
 menu += '<input type="text" class="commentfacesearch" placeholder="search commentfaces">';
 menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
@@ -66,7 +67,8 @@ for(var i = 0; i < replyButton.length; i++){
     */
 
     form.children(".md").remove();
-    form.children(".usertext-edit").children(".md").children("textarea").val('');
+    var marked = window.getSelection().toString();
+    form.children(".usertext-edit").children(".md").children("textarea").val(marked);
 
     /*
     ** Add new field
@@ -247,6 +249,38 @@ function createCommentfacefield(form) {
   }
 
   /*
+  ** Shows the ten recently used Commentfaces
+  */
+
+  var showrecentcommentfaces = document.getElementsByClassName("showrecentcommentfaces");
+
+  for(var i = 0; i < showrecentcommentfaces.length; i++){
+      showrecentcommentfaces[i].addEventListener('click', function(){
+          var result = "";
+          $(this).siblings(".commentfacewrapper").css("display","inherit");
+          var storageItemList = localStorage.getItem('recent');
+          storageItemList = storageItemList.replace("#","");
+          storageItemList = storageItemList.split(",");
+          storageItemList = storageItemList.reverse();
+          storageItemList.forEach(function(itemList) {
+              if(url == "manga") {
+                result += "<a href=\"//#"+itemList+"\" class=\"addCommentface\" data-href-url=\"//#"+itemList+"\"></a>";
+              }
+              else if(url == "anime") {
+                result += "<a href=\"#"+itemList+"\" class=\"addCommentface\" data-href-url=\"#"+itemList+"\" rel=\"nofollow\"></a>";
+              }
+          });
+          $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+
+          for (var i = 0; i < classname.length; i++) {
+              /*
+              ** Setting up actions on Clicking the Dummy Commentfaces
+              */
+              classname[i].addEventListener('click', addClickEvent, false);
+          }
+      });
+  }
+  /*
   ** Setup AniList Search
   */
 
@@ -258,14 +292,36 @@ function createCommentfacefield(form) {
         if(e.keyCode == 13) {
             var query = $( this ).val();
             searchOnAniList(query, $( this ));
-            //  var d = data.data.title.romaji;
-            //$( this ).siblings(".commentfacewrapper").css("display","inherit");
-            //$( this ).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
         }
       });
 
   }
 
+}
+
+/*
+** Save Faces to show most recent ones
+*/
+
+function saveRecentFaces(store){
+  var storageItemList = localStorage.getItem('recent');
+  if(storageItemList !== null) {
+    if(storageItemList.includes(store)) {
+      storageItemList = storageItemList.replace(store, "");
+      storageItemList = storageItemList.replace(",,", ",");
+      if(storageItemList[0] == ","){
+        storageItemList = storageItemList.substr(1);
+      }
+    }
+    if(storageItemList.match(/#/g).length > 9){
+      storageItemList = storageItemList.replace(/#(.*?),/, "");
+    }
+    localStorage.setItem('recent', storageItemList + "," + store);
+
+  }
+  else {
+    localStorage.setItem('recent', store);
+  }
 }
 
 function addClickEvent(e) {
@@ -282,6 +338,7 @@ function addClickEvent(e) {
       commentcode = commentcode.substr(raute, commentcode.length - 1);
       this.setAttribute("href", commentcode);
   }
+  saveRecentFaces(commentcode);
   var commentfacetext = this.innerHTML;
   commentfacetext = commentfacetext.replace("<strong>","**");
   commentfacetext = commentfacetext.replace("</strong>","**");
@@ -392,7 +449,7 @@ function searchOnAniList(searchterm, targetelement) {
                        }
 
     function handleData(data) {
-        var result = '<table class="browseAniListtable">';
+        var result = '<table class="browseAniListtable">'; var sorttable = [];
         for(var i = 0; i < data.data.Page.media.length; i++) {
             var name = data.data.Page.media[i].title.romaji;
             var id = data.data.Page.media[i].id;
@@ -400,8 +457,16 @@ function searchOnAniList(searchterm, targetelement) {
             var type = data.data.Page.media[i].type;
             var format = data.data.Page.media[i].format;
             var mdma = '['+name+'](https://anilist.co/'+type.toLowerCase()+'/'+id+'/)';
-            result += '<tr><td><img class="anilistsearchimg" data="'+mdma+'" src="'+coverimage+'"></td>';
-            result += '<td><a href="https://anilist.co/'+type.toLowerCase()+'/'+id+'/">'+name+'</a></td><td>'+format.replace("_"," ").toLowerCase()+'</td></tr>';
+            sorttable.push([name,id,coverimage,type,format,mdma]);
+
+          }
+          sorttable = sorttable.sort(
+            function(a, b) {
+               return b[4] > a[4];
+          })
+          for(var i=0; i < sorttable.length;i++) {
+            result += '<tr><td><img class="anilistsearchimg" data="'+sorttable[i][5]+'" src="'+sorttable[i][2]+'"></td>';
+            result += '<td><a href="https://anilist.co/'+sorttable[i][4].toLowerCase()+'/'+sorttable[i][1]+'/">'+sorttable[i][0]+'</a></td><td>'+sorttable[i][4].replace("_"," ").toLowerCase()+'</td></tr>';
           }
           result += '</table>';
           targetelement.siblings(".commentfacewrapper").css("display","inherit");
