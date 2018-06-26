@@ -61,8 +61,8 @@ function onGot(result) {
     sp = false;
   }
 
-
   createMenu(cf,as,sp);
+
 }
 
 var getting = browser.storage.local.get(["opcommentfaces","opanisearch","opspoiler"]);
@@ -94,14 +94,15 @@ function createMenu(cf,as,sp) {
   }
   menu += '<div class="commentfacewrapper">';
   menu += '<div class="commentfacecontainer"></div></div></form></div>';
-}
-/*
-** Create Commentface Input on initialy reply to thread reply field
-*/
 
-var form = $(".commentarea").children("form");
-form.prepend( menu );
-createCommentfacefield(form);
+  /*
+  ** Create Commentface Input on initialy reply to thread reply field
+  */
+
+  var form = $(".commentarea").children("form");
+  form.prepend( menu );
+  createCommentfacefield(form);
+}
 
 /*
 ** Create Commentface Input Field on Click at the container of the Click
@@ -209,15 +210,14 @@ function createCommentfacefield(form) {
         filteredFaces.forEach(function(filteredFace) {
               result += generateCommentfaces(filteredFace,texttop, textbottom, texthover);
         });
-
         $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
         for (var i = 0; i < classname.length; i++) {
             /*
             ** Setting up actions on Clicking the Dummy Commentfaces
             */
+            classname[i].addEventListener("mousedown", addClickEvent, false);
 
-            classname[i].addEventListener('click', addClickEvent, false);
         }
       //}
 
@@ -290,7 +290,7 @@ function createCommentfacefield(form) {
             /*
             ** Setting up actions on Clicking the Dummy Commentfaces
             */
-            classname[i].addEventListener('click', addClickEvent, false);
+            classname[i].addEventListener('mousedown', addClickEvent, false);
         }
       });
   }
@@ -343,7 +343,7 @@ function createCommentfacefield(form) {
               /*
               ** Setting up actions on Clicking the Dummy Commentfaces
               */
-              classname[i].addEventListener('click', addClickEvent, false);
+              classname[i].addEventListener('mousedown', addClickEvent, true);
           }
       });
   }
@@ -412,13 +412,10 @@ function createCommentfacefield(form) {
   for(var i = 0; i < addSpoiler.length; i++){
     addSpoiler[i].addEventListener('mousedown', function(e){
         e.preventDefault();
-        //var marked = window.getSelection().toString();
-        //if(marked == "") {
         var txtarea = $(this).parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
         var start = txtarea[0].selectionStart;
         var finish = txtarea[0].selectionEnd;
         var sel = txtarea[0].value.substring(start, finish);
-        //}
 
         if(sel !== "")
           var output = '[](/s "' + sel + '")';
@@ -461,7 +458,7 @@ function saveRecentFaces(store){
 
 function addClickEvent(e) {
 
-  e.preventDefault();
+  //e.preventDefault();
 
   /*
   ** Get href from clickedCommentface to set it into the textarea
@@ -493,6 +490,8 @@ function addClickEvent(e) {
   var formfield = $(this).parents(".commentfacecontainer").parents(".commentfacewrapper").parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
 
   insertOutput(output,formfield);
+
+  e.event.stopImmediatePropagation();
 
 }
 

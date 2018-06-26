@@ -3,7 +3,7 @@
   "description": "Add functionalities to r/anime",
   "manifest_version": 2,
   "name": "r/anime Enhanced",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "permissions": [
     "https://shit-taste.net/*",
     "https://graphql.anilist.co/*",

@@ -17,18 +17,18 @@ function restoreOptions() {
       document.querySelector("#anisearch").checked = true;
     }
 
-    if(result.anisearch !== undefined) {
+    if(result.opanisearch !== undefined) {
       document.querySelector("#anisearch").checked = result.opanisearch;
     } else {
       document.querySelector("#anisearch").checked = true;
     }
 
-    if(result.spoiler !== undefined) {
+    if(result.opspoiler !== undefined) {
       document.querySelector("#spoiler").checked = result.opspoiler;
     } else {
       document.querySelector("#spoiler").checked = false;
     }
-    
+
   }
 
   function onError(error) {
