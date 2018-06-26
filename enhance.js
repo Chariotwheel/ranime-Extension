@@ -32,22 +32,69 @@ var filteredFaces = [];
 ** Preparing the Commentface Menu
 */
 
-var menu = '<div class="md ranimeenhanced"><form action="" class="commentfaces">';
-menu += '<a class="showrecentcommentfaces">🕐</a>';
-//menu += '<a class="showrecentfavouritefaces">♥</a>';
-menu += '<a class="showallcommentfaces">Browse Faces</a>';
-menu += '<input type="text" class="commentfacesearch" placeholder="search commentfaces">';
-menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
-menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bottomtext">';
-menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
-menu += '<br /><input type="text" class="aniListSearch anilist" placeholder="Search Media">';
-menu += '<input type="text" class="aniListSearchCharacters anilist" placeholder="Search Characters">';
-menu += '<input type="text" class="aniListSearchStaff anilist" placeholder="Search Staff">';
-menu += '<input type="text" class="aniListSearchStudios anilist" placeholder="Search Studios">';
-menu += '<br/><a class="addSpoiler">Spoiler</a>';
-menu += '<div class="commentfacewrapper">';
-menu += '<div class="commentfacecontainer"></div></div></form></div>';
+// Get Stored options
 
+function onError(error) {
+  console.log(`Error: ${error}`);
+}
+
+function onGot(result) {
+
+  if(result.opcommentfaces !== undefined) {
+    cf = result.opcommentfaces;
+  }
+  else {
+    cf = true;
+  }
+
+  if(result.opanisearch !== undefined) {
+    as = result.opanisearch;
+  }
+  else {
+    as = true;
+  }
+
+  if(result.opspoiler !== undefined) {
+    sp = result.opspoiler;
+  }
+  else {
+    sp = false;
+  }
+
+
+  createMenu(cf,as,sp);
+}
+
+var getting = browser.storage.local.get(["opcommentfaces","opanisearch","opspoiler"]);
+getting.then(onGot, onError);
+
+// Create Menu
+
+var menu = "";
+
+function createMenu(cf,as,sp) {
+  menu += '<div class="md ranimeenhanced"><form action="" class="commentfaces">';
+  if(cf) {
+    menu += '<a class="showrecentcommentfaces">🕐</a>';
+    //menu += '<a class="showrecentfavouritefaces">♥</a>';
+    menu += '<a class="showallcommentfaces">Browse Faces</a>';
+    menu += '<input type="text" class="commentfacesearch" placeholder="search commentfaces">';
+    menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
+    menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bottomtext">';
+    menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
+  }
+  if(as) {
+    menu += '<br /><input type="text" class="aniListSearch anilist" placeholder="Search Media">';
+    menu += '<input type="text" class="aniListSearchCharacters anilist" placeholder="Search Characters">';
+    menu += '<input type="text" class="aniListSearchStaff anilist" placeholder="Search Staff">';
+    menu += '<input type="text" class="aniListSearchStudios anilist" placeholder="Search Studios">';
+  }
+  if(sp) {
+    menu += '<br/><a class="addSpoiler">Spoiler</a>';
+  }
+  menu += '<div class="commentfacewrapper">';
+  menu += '<div class="commentfacecontainer"></div></div></form></div>';
+}
 /*
 ** Create Commentface Input on initialy reply to thread reply field
 */
@@ -629,7 +676,7 @@ function searchOnAniList(searchterm, targetelement, field) {
             })
           for(var i=0; i < sorttable.length;i++) {
             result += '<tr><td><img class="anilistsearchimg" data="'+sorttable[i][5]+'" src="'+sorttable[i][2]+'"></td>';
-            result += '<td><a href="https://anilist.co/'+sorttable[i][4].toLowerCase()+'/'+sorttable[i][1]+'/" target="_blank">'+sorttable[i][0]+'</a></td><td>'+sorttable[i][4].replace("_"," ").toLowerCase()+'</td></tr>';
+            result += '<td><a href="https://anilist.co/'+sorttable[i][3].toLowerCase()+'/'+sorttable[i][1]+'/" target="_blank">'+sorttable[i][0]+'</a></td><td>'+sorttable[i][4].replace("_"," ").toLowerCase()+'</td></tr>';
           }
         }
         else if(topic == "staff") {
