@@ -74,20 +74,28 @@ var menu = "";
 
 function createMenu(cf,as,sp) {
   menu += '<div class="md ranimeenhanced"><form action="" class="commentfaces">';
+  if(cf)
+    menu += '<a class="stab showcommentfacestab">Commentfaces</a>';
+  if(as)
+    menu += '<a class="stab anilisttab">AniList</a>';
   if(cf) {
-    menu += '<a class="showrecentcommentfaces">🕐</a>';
-    //menu += '<a class="showrecentfavouritefaces">♥</a>';
-    menu += '<a class="showallcommentfaces">Browse Faces</a>';
-    menu += '<input type="text" class="commentfacesearch" placeholder="search commentfaces">';
-    menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
-    menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bottomtext">';
-    menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
+    menu += '<div class="tabwrapper commenttabwrapper">';
+      menu += '<a class="showrecentcommentfaces">🕐</a>';
+      //menu += '<a class="showrecentfavouritefaces">♥</a>';
+      menu += '<a class="showallcommentfaces">Browse Faces</a>';
+      menu += '<input type="text" class="commentfacesearch" placeholder="search commentfaces">';
+      menu += '<input type="text" class="commentfacetext texttop" placeholder="Toptext">';
+      menu += '<input type="text" class="commentfacetext textbottom" placeholder="Bottomtext">';
+      menu += '<input type="text" class="commentfacetext texthover" placeholder="Hovertext">';
+    menu += '</div>';
   }
   if(as) {
-    menu += '<br /><input type="text" class="aniListSearch anilist" placeholder="Search Media">';
-    menu += '<input type="text" class="aniListSearchCharacters anilist" placeholder="Search Characters">';
-    menu += '<input type="text" class="aniListSearchStaff anilist" placeholder="Search Staff">';
-    menu += '<input type="text" class="aniListSearchStudios anilist" placeholder="Search Studios">';
+    menu += '<div class="tabwrapper anilisttabwrapper">';
+      menu += '<input type="text" class="aniListSearch anilist" placeholder="Search Media">';
+      menu += '<input type="text" class="aniListSearchCharacters anilist" placeholder="Search Characters">';
+      menu += '<input type="text" class="aniListSearchStaff anilist" placeholder="Search Staff">';
+      menu += '<input type="text" class="aniListSearchStudios anilist" placeholder="Search Studios">';
+    menu += '</div>';
   }
   if(sp) {
     menu += '<br/><a class="addSpoiler">Spoiler</a>';
@@ -185,6 +193,8 @@ for(var i = 0; i < saveButton.length; i++){
 */
 
 function createCommentfacefield(form) {
+
+  var innerform = $(form).children(".ranimeenhanced").children(".commentfaces");
 
   var classname = document.getElementsByClassName("addCommentface");
   var classnamesearch = document.getElementsByClassName("commentfacesearch");
@@ -293,6 +303,7 @@ function createCommentfacefield(form) {
             classname[i].addEventListener('mousedown', addClickEvent, false);
         }
       });
+
   }
 
   function generateCommentfaces(filteredFace, texttop, textbottom, texthover) {
@@ -429,6 +440,31 @@ function createCommentfacefield(form) {
         txtarea.focus();
     });
   }
+
+  /*
+  ** Make Tabs Clickable
+  */
+
+  var showcommentfacestab = innerform.children(".showcommentfacestab");
+  var anilisttab = innerform.children(".anilisttab");
+
+  console.log(anilisttab);
+
+  showcommentfacestab.click(function() {
+    if(showcommentfacestab.siblings(".commenttabwrapper").css("display") == "none")
+      showcommentfacestab.siblings(".commenttabwrapper").css("display","inherit");
+    else
+      showcommentfacestab.siblings(".commenttabwrapper").css("display","none");
+  });
+
+  anilisttab.click(function() {
+    console.log("heyja");
+    if(anilisttab.siblings(".anilisttabwrapper").css("display") == "none")
+      anilisttab.siblings(".anilisttabwrapper").css("display","inherit");
+    else
+      anilisttab.siblings(".anilisttabwrapper").css("display","none");
+  });
+
 }
 
 /*

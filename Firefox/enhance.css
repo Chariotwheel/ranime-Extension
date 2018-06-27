@@ -14,13 +14,29 @@
 .showallcommentfaces:hover, .showrecentcommentfaces:hover, .showrecentfavouritefaces:hover, .addSpoiler:hover {
   color:darkgrey !important;
 }
-/*.addSpoiler {
+.addSpoiler {
    -moz-user-select: none;
    -khtml-user-select: none;
    -webkit-user-select: none;
    -ms-user-select: none;
    user-select: none;
-}*/
+}
+.stab {
+  padding: 5px 15px 5px 10px;
+  background: beige;
+  color:grey;
+  border-radius: 0 25px 25px 0;
+  cursor: default;
+}
+.stabactive {
+  background:bisque;
+}
+.stab:hover {
+  color:lightgrey;
+}
+.tabwrapper {
+  display: none;
+}
 .showrecentfavouritefaces {
   color:red !important;
 }
