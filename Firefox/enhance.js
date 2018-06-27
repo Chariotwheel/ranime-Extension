@@ -17,8 +17,7 @@ var request = new XMLHttpRequest();
 request.open("POST", apiurl);
 request.setRequestHeader("Content-Type", "application/json");
 request.overrideMimeType("text/plain");
-request.onload = function()
-{
+request.onload = function(){
     var options = JSON.parse(request.responseText);
     options.forEach(function(option){
       commentfaces.push(option);
@@ -35,7 +34,7 @@ var filteredFaces = [];
 // Get Stored options
 
 function onError(error) {
-  console.log(`Error: ${error}`);
+  //console.log(`Error: ${error}`);
 }
 
 function onGot(result) {
@@ -78,6 +77,8 @@ function createMenu(cf,as,sp) {
     menu += '<a class="stab showcommentfacestab">Commentfaces</a>';
   if(as)
     menu += '<a class="stab anilisttab">AniList</a>';
+  if(sp)
+    menu += '<a class="stab formattab">Formatting</a>';
   if(cf) {
     menu += '<div class="tabwrapper commenttabwrapper">';
       menu += '<a class="showrecentcommentfaces">🕐</a>';
@@ -98,7 +99,9 @@ function createMenu(cf,as,sp) {
     menu += '</div>';
   }
   if(sp) {
-    menu += '<br/><a class="addSpoiler">Spoiler</a>';
+    menu += '<div class="tabwrapper formattabwrapper">';
+      menu += '<a class="addSpoiler">Spoiler</a>';
+    menu += '</div>';
   }
   menu += '<div class="commentfacewrapper">';
   menu += '<div class="commentfacecontainer"></div></div></form></div>';
@@ -138,6 +141,9 @@ for(var i = 0; i < replyButton.length; i++){
     form.prepend( menu );
     createCommentfacefield(form);
 
+    var innerform = $(form).children(".ranimeenhanced").children(".commentfaces");
+    initializeTabs();
+
   });
 }
 
@@ -152,15 +158,11 @@ for(var i = 0; i < editButton.length; i++){
 
     var form = $( this ).parents(".entry").children('form');
 
-    /*
-    ** Remove Copy from initial reply field and clear commentfield
-    */
+    // Remove Copy from initial reply field and clear commentfield
 
     form.children(".md").remove();
 
-    /*
-    ** Add new field
-    */
+    // Add new field
 
     form.prepend( menu );
     createCommentfacefield(form);
@@ -196,39 +198,69 @@ function createCommentfacefield(form) {
 
   var innerform = $(form).children(".ranimeenhanced").children(".commentfaces");
 
-  /*
-  ** Initialize Tabs
-  */
+  initializeTabs(innerform);
+}
 
+/*
+** Initialize Tabs
+*/
+
+function initializeTabs(innerform) {
   var showcommentfacestab = innerform.children(".showcommentfacestab");
   var anilisttab = innerform.children(".anilisttab");
+  var formattab = innerform.children(".formattab");
 
   showcommentfacestab.click(function() {
     if(showcommentfacestab.siblings(".commenttabwrapper").css("display") == "none") {
-      anilisttab.siblings(".anilisttabwrapper").css("display","none");
+
+      showcommentfacestab.siblings(".anilisttabwrapper").css("display","none");
+      showcommentfacestab.siblings(".formattabwrapper").css("display","none");
       showcommentfacestab.siblings(".commenttabwrapper").css("display","inherit");
+
+      innerform.children(".commentfacewrapper").children(".commentfacecontainer").html("");
       createCommentfaces(innerform);
     }
     else {
       showcommentfacestab.siblings(".commenttabwrapper").css("display","none");
+      innerform.children(".commentfacewrapper").css("display","none");
     }
   });
 
   anilisttab.click(function() {
     if(anilisttab.siblings(".anilisttabwrapper").css("display") == "none") {
-      showcommentfacestab.siblings(".commenttabwrapper").css("display","none");
+
+      anilisttab.siblings(".commenttabwrapper").css("display","none");
+      anilisttab.siblings(".formattabwrapper").css("display","none");
       anilisttab.siblings(".anilisttabwrapper").css("display","inherit");
+
+      innerform.children(".commentfacewrapper").children(".commentfacecontainer").html("");
+      setUpAniListSearch(innerform);
     }
     else {
       anilisttab.siblings(".anilisttabwrapper").css("display","none");
+      innerform.children(".commentfacewrapper").css("display","none");
     }
   });
 
+  formattab.click(function() {
+    if(formattab.siblings(".formattabwrapper").css("display") == "none") {
+
+      formattab.siblings(".commenttabwrapper").css("display","none");
+      formattab.siblings(".anilisttabwrapper").css("display","none");
+      formattab.siblings(".formattabwrapper").css("display","inherit");
+
+      innerform.children(".commentfacewrapper").children(".commentfacecontainer").html("");
+      setUpFormat(innerform);
+    }
+    else {
+      formattab.siblings(".formattabwrapper").css("display","none");
+      innerform.children(".commentfacewrapper").css("display","none");
+    }
+  });
 }
 
 function createCommentfaces(innerform) {
 
-  var classname = innerform.children(".commentfacewrapper").children(".commentfaceconainer").children(".addCommentface");
   var classnamesearch = innerform.children(".commenttabwrapper").children(".commentfacesearch");
 
   classnamesearch.keyup(function(){
@@ -246,9 +278,10 @@ function createCommentfaces(innerform) {
     });
     $(this).parents(".commenttabwrapper").siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
-    for (var i = 0; i < classname.length; i++) {
+    var activecommentfaces = $(this).parents(".commenttabwrapper").siblings(".commentfacewrapper").children(".commentfacecontainer").children(".addCommentface");
 
-        classname[i].addEventListener("mousedown", addClickEvent, false);
+    for (var i = 0; i < activecommentfaces.length; i++) {
+        activecommentfaces[i].addEventListener('mousedown', addClickEvent, false);
 
     }
 
@@ -258,15 +291,14 @@ function createCommentfaces(innerform) {
   ** Set the Commentface text on input on the dummy commentfaces
   */
 
-  var commentfacetext = document.getElementsByClassName("commentfacetext");
+    var commentfacetext = innerform.children(".commenttabwrapper").children(".commentfacetext");
 
-  for(var i = 0; i < commentfacetext.length; i++){
-    commentfacetext[i].addEventListener('keyup', function(){
+    commentfacetext.keyup(function(){
 
       var inputclass = $( this ).attr('class').split(' ')[1];
       var inputvalue = $( this ).val();
 
-      var commentfacefield = $( this ).siblings(".commentfacewrapper").children(".commentfacecontainer").children("a");
+      var commentfacefield = $( this ).parents(".commenttabwrapper").siblings(".commentfacewrapper").children(".commentfacecontainer").children("a");
       commentfacefield.each(function() {
         var facecontent = $( this ).html();
         if(inputclass == "texttop") {
@@ -287,19 +319,17 @@ function createCommentfaces(innerform) {
         }
       });
     });
-  }
 
   /*
   ** Browse Commentfaces
   ** Note: The whole filtering should be put into it's own function. At this point I got the same code twice
   */
 
-  var showallcommentfaces = document.getElementsByClassName("showallcommentfaces");
+      var showallcommentfaces = innerform.children(".commenttabwrapper").children(".showallcommentfaces");
 
-  for(var i = 0; i < showallcommentfaces.length; i++){
-      showallcommentfaces[i].addEventListener('click', function(){
+      showallcommentfaces.click(function(){
         var result = "";
-        $(this).siblings(".commentfacewrapper").css("display","inherit");
+        $(this).parents(".commenttabwrapper").siblings(".commentfacewrapper").css("display","inherit");
 
         var texttop = $(this).siblings(".texttop:first").val();
         var textbottom = $(this).siblings(".textbottom:first").val();
@@ -313,41 +343,43 @@ function createCommentfaces(innerform) {
 
         });
 
-        $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+        $(this).parents(".commenttabwrapper").siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
-        for (var i = 0; i < classname.length; i++) {
+        var activecommentfaces = $(this).parents(".commenttabwrapper").siblings(".commentfacewrapper").children(".commentfacecontainer").children(".addCommentface");
+
+        for (var i = 0; i <  activecommentfaces.length; i++) {
             /*
             ** Setting up actions on Clicking the Dummy Commentfaces
             */
-            classname[i].addEventListener('mousedown', addClickEvent, false);
+             activecommentfaces[i].addEventListener('mousedown', addClickEvent, false);
         }
       });
 
-  }
-
   function generateCommentfaces(filteredFace, texttop, textbottom, texthover) {
+
     var inner = texttop;
+
     if(typeof textbottom !== 'undefined'){
       inner += "<strong>"+textbottom+"</strong>";
     }
     if(url == "manga") {
       return "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" title=\""+texthover+"\" data-href-url=\"//#"+filteredFace+"\">"+inner+"</a>";
     }
-    else if(url == "anime") {
+    else if(url == "anime" || url == "ftfanime") {
       return "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" title=\""+texthover+"\" data-href-url=\"#"+filteredFace+"\" rel=\"nofollow\">"+inner+"</a>";
     }
+
   }
 
   /*
   ** Shows the ten recently used Commentfaces
   */
 
-  var showrecentcommentfaces = document.getElementsByClassName("showrecentcommentfaces");
+      var showrecentcommentfaces = innerform.children(".commenttabwrapper").children(".showrecentcommentfaces");
 
-  for(var i = 0; i < showrecentcommentfaces.length; i++){
-      showrecentcommentfaces[i].addEventListener('click', function(){
+      showrecentcommentfaces.click(function(){
           var result = "";
-          $(this).siblings(".commentfacewrapper").css("display","inherit");
+          $(this).parents(".commenttabwrapper").siblings(".commentfacewrapper").css("display","inherit");
 
           var texttop = $(this).siblings(".texttop:first").val();
           var textbottom = $(this).siblings(".textbottom:first").val();
@@ -367,99 +399,82 @@ function createCommentfaces(innerform) {
           if(result == ""){
             result = "<br />No Commentfaces used recently.";
           }
-          $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+          $(this).parents(".commenttabwrapper").siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
-          for (var i = 0; i < classname.length; i++) {
-              /*
-              ** Setting up actions on Clicking the Dummy Commentfaces
-              */
-              classname[i].addEventListener('mousedown', addClickEvent, true);
+          var activecommentfaces = $(this).parents(".commenttabwrapper").siblings(".commentfacewrapper").children(".commentfacecontainer").children(".addCommentface");
+
+          for (var i = 0; i < activecommentfaces.length; i++) {
+              activecommentfaces[i].addEventListener('mousedown', addClickEvent, false);
+
           }
       });
-  }
-  /*
-  ** Setup AniList Search
-  */
 
-  var aniListSearch = document.getElementsByClassName("aniListSearch");
+}
 
-  for(var i = 0; i < aniListSearch.length; i++){
 
-      aniListSearch[i].addEventListener('keyup', function(e){
-        if(e.keyCode == 13) {
-            var query = $( this ).val();
-            searchOnAniList(query, $( this ), "anime");
-        }
-      });
+/*
+** Setup AniList Search
+*/
 
-  }
+function setUpAniListSearch(innerform) {
 
-  var aniListSearchStaff = document.getElementsByClassName("aniListSearchStaff");
-
-  for(var i = 0; i < aniListSearchStaff.length; i++){
-
-      aniListSearchStaff[i].addEventListener('keyup', function(e){
-        if(e.keyCode == 13) {
-            var query = $( this ).val();
-            searchOnAniList(query, $( this ), "staff");
-        }
-      });
-
-  }
-
-  var aniListSearchStudios = document.getElementsByClassName("aniListSearchStudios");
-
-  for(var i = 0; i < aniListSearchStudios.length; i++){
-
-      aniListSearchStudios[i].addEventListener('keyup', function(e){
-        if(e.keyCode == 13) {
-            var query = $( this ).val();
-            searchOnAniList(query, $( this ), "studios");
-        }
-      });
-
-  }
-
-  var aniListSearchCharacters = document.getElementsByClassName("aniListSearchCharacters");
-
-  for(var i = 0; i < aniListSearchCharacters.length; i++){
-
-      aniListSearchCharacters[i].addEventListener('keyup', function(e){
-        if(e.keyCode == 13) {
-            var query = $( this ).val();
-            searchOnAniList(query, $( this ), "characters");
-        }
-      });
-
-  }
-
-  /*
-  ** Text functions
-  */
-
-  var addSpoiler = document.getElementsByClassName("addSpoiler");
-
-  for(var i = 0; i < addSpoiler.length; i++){
-    addSpoiler[i].addEventListener('mousedown', function(e){
-        e.preventDefault();
-        var txtarea = $(this).parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
-        var start = txtarea[0].selectionStart;
-        var finish = txtarea[0].selectionEnd;
-        var sel = txtarea[0].value.substring(start, finish);
-
-        if(sel !== "")
-          var output = '[](/s "' + sel + '")';
-        else
-         var output = '[](/s "")';
-
-        var formfieldbefore = txtarea.val().substr(0,start);
-        var formfieldafter = txtarea.val().substr(finish,txtarea.val().length)
-        txtarea.val(formfieldbefore + output + formfieldafter);
-
-        txtarea.focus();
+    innerform.children(".anilisttabwrapper").children(".aniListSearch").keyup(function(e){
+      if(e.keyCode == 13) {
+          var query = $( this ).val();
+          searchOnAniList(query, $( this ), "anime");
+      }
     });
-  }
 
+    innerform.children(".anilisttabwrapper").children(".aniListSearchStaff").keyup(function(e){
+      if(e.keyCode == 13) {
+          var query = $( this ).val();
+          searchOnAniList(query, $( this ), "staff");
+      }
+    });
+
+    innerform.children(".anilisttabwrapper").children(".aniListSearchStudios").keyup(function(e){
+      if(e.keyCode == 13) {
+          var query = $( this ).val();
+          searchOnAniList(query, $( this ), "studios");
+      }
+    });
+
+    innerform.children(".anilisttabwrapper").children(".aniListSearchCharacters").keyup(function(e){
+      if(e.keyCode == 13) {
+          var query = $( this ).val();
+          searchOnAniList(query, $( this ), "characters");
+      }
+    });
+
+}
+
+/*
+** Set Up Spoiler Button
+*/
+
+function setUpFormat(innerform){
+  innerform.children(".formattabwrapper").children(".addSpoiler").click(function(e){
+
+    e.preventDefault;
+
+    var txtarea = $(this).parents(".formattabwrapper").parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
+    var start = txtarea[0].selectionStart;
+    var finish = txtarea[0].selectionEnd;
+    var sel = txtarea[0].value.substring(start, finish);
+
+    if(sel !== "")
+      var output = '[](/s "' + sel + '")';
+    else
+      var output = '[](/s "")';
+
+    var formfieldbefore = txtarea.val().substr(0,start);
+    var formfieldafter = txtarea.val().substr(finish,txtarea.val().length)
+
+    txtarea.val(formfieldbefore + output + formfieldafter);
+
+    txtarea.focus();
+
+  });
 }
 
 /*
@@ -487,9 +502,7 @@ function saveRecentFaces(store){
   }
 }
 
-function addClickEvent(e) {
-
-  //e.preventDefault();
+function addClickEvent() {
 
   /*
   ** Get href from clickedCommentface to set it into the textarea
@@ -752,12 +765,12 @@ function searchOnAniList(searchterm, targetelement, field) {
             }
           for(var i=0; i < sorttable.length;i++) {
             result += '<tr><td><img class="anilistsearchimg" data="'+sorttable[i][4]+'" src="'+sorttable[i][3]+'"></td>';
-            result += '<td><a href="https://anilist.co/studio/'+sorttable[i][0]+'/" target="_blank">'+sorttable[i][1]+' '+sorttable[i][2]+'</a></td></tr>';
+            result += '<td><a href="https://anilist.co/character/'+sorttable[i][0]+'/" target="_blank">'+sorttable[i][1]+' '+sorttable[i][2]+'</a></td></tr>';
           }
         }
           result += '</table>';
-          targetelement.siblings(".commentfacewrapper").css("display","inherit");
-          targetelement.siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+          targetelement.parents(".anilisttabwrapper").siblings(".commentfacewrapper").css("display","inherit");
+          targetelement.parents(".anilisttabwrapper").siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
           var anilistsearchimg = document.getElementsByClassName("anilistsearchimg");
 

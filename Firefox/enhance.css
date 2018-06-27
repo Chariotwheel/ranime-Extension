@@ -27,6 +27,8 @@
   color:grey;
   border-radius: 0 25px 25px 0;
   cursor: default;
+  line-height: 30px;
+  margin-right: 3px;
 }
 .stabactive {
   background:bisque;
@@ -86,4 +88,7 @@
 }
 .browseAniListtable  td {
    text-align:center;
+}
+.modal-dialog {
+  margin-top:0 !important;
 }
