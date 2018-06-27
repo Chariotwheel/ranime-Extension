@@ -196,44 +196,63 @@ function createCommentfacefield(form) {
 
   var innerform = $(form).children(".ranimeenhanced").children(".commentfaces");
 
-  var classname = document.getElementsByClassName("addCommentface");
-  var classnamesearch = document.getElementsByClassName("commentfacesearch");
+  /*
+  ** Initialize Tabs
+  */
 
-  for(var j = 0; j < classnamesearch.length; j++) {
+  var showcommentfacestab = innerform.children(".showcommentfacestab");
+  var anilisttab = innerform.children(".anilisttab");
 
-    /*
-    * When typing in the search bar, show fitting commentfaces
-    */
+  showcommentfacestab.click(function() {
+    if(showcommentfacestab.siblings(".commenttabwrapper").css("display") == "none") {
+      anilisttab.siblings(".anilisttabwrapper").css("display","none");
+      showcommentfacestab.siblings(".commenttabwrapper").css("display","inherit");
+      createCommentfaces(innerform);
+    }
+    else {
+      showcommentfacestab.siblings(".commenttabwrapper").css("display","none");
+    }
+  });
 
-    classnamesearch[j].addEventListener('keyup', function() {
+  anilisttab.click(function() {
+    if(anilisttab.siblings(".anilisttabwrapper").css("display") == "none") {
+      showcommentfacestab.siblings(".commenttabwrapper").css("display","none");
+      anilisttab.siblings(".anilisttabwrapper").css("display","inherit");
+    }
+    else {
+      anilisttab.siblings(".anilisttabwrapper").css("display","none");
+    }
+  });
 
-      //if(this.value.length > 1) {
+}
 
-        var result = "";
-        let filteredFaces = commentfaces.filter(x => x.toLowerCase().includes(this.value));
-        $(this).siblings(".commentfacewrapper").css("display","inherit");
+function createCommentfaces(innerform) {
 
-        var texttop = $(this).siblings(".texttop:first").val();
-        var textbottom = $(this).siblings(".textbottom:first").val();
-        var texthover = $(this).siblings(".texthover:first").val();
+  var classname = innerform.children(".commentfacewrapper").children(".commentfaceconainer").children(".addCommentface");
+  var classnamesearch = innerform.children(".commenttabwrapper").children(".commentfacesearch");
 
-        filteredFaces.forEach(function(filteredFace) {
-              result += generateCommentfaces(filteredFace,texttop, textbottom, texthover);
-        });
-        $(this).siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
+  classnamesearch.keyup(function(){
 
-        for (var i = 0; i < classname.length; i++) {
-            /*
-            ** Setting up actions on Clicking the Dummy Commentfaces
-            */
-            classname[i].addEventListener("mousedown", addClickEvent, false);
+    var result = "";
+    let filteredFaces = commentfaces.filter(x => x.toLowerCase().includes(this.value));
+    $(this).parents(".commenttabwrapper").siblings(".commentfacewrapper").css("display","inherit");
 
-        }
-      //}
+    var texttop = $(this).siblings(".texttop:first").val();
+    var textbottom = $(this).siblings(".textbottom:first").val();
+    var texthover = $(this).siblings(".texthover:first").val();
 
+    filteredFaces.forEach(function(filteredFace) {
+          result += generateCommentfaces(filteredFace,texttop, textbottom, texthover);
     });
+    $(this).parents(".commenttabwrapper").siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
-  }
+    for (var i = 0; i < classname.length; i++) {
+
+        classname[i].addEventListener("mousedown", addClickEvent, false);
+
+    }
+
+  });
 
   /*
   ** Set the Commentface text on input on the dummy commentfaces
@@ -440,30 +459,6 @@ function createCommentfacefield(form) {
         txtarea.focus();
     });
   }
-
-  /*
-  ** Make Tabs Clickable
-  */
-
-  var showcommentfacestab = innerform.children(".showcommentfacestab");
-  var anilisttab = innerform.children(".anilisttab");
-
-  console.log(anilisttab);
-
-  showcommentfacestab.click(function() {
-    if(showcommentfacestab.siblings(".commenttabwrapper").css("display") == "none")
-      showcommentfacestab.siblings(".commenttabwrapper").css("display","inherit");
-    else
-      showcommentfacestab.siblings(".commenttabwrapper").css("display","none");
-  });
-
-  anilisttab.click(function() {
-    console.log("heyja");
-    if(anilisttab.siblings(".anilisttabwrapper").css("display") == "none")
-      anilisttab.siblings(".anilisttabwrapper").css("display","inherit");
-    else
-      anilisttab.siblings(".anilisttabwrapper").css("display","none");
-  });
 
 }
 
