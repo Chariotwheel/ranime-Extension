@@ -187,6 +187,9 @@ function createCommentfacefield(form) {
   var innerform = $(form).children(".ranimeenhanced").children(".commentfaces");
 
   initializeTabs(innerform);
+
+  setUpFormat(innerform);
+
 }
 
 /*
@@ -233,12 +236,13 @@ function initializeTabs(innerform) {
   formattab.click(function() {
     if(formattab.siblings(".formattabwrapper").css("display") == "none") {
 
+      innerform.children(".commentfacewrapper").css("display","none");
       formattab.siblings(".commenttabwrapper").css("display","none");
       formattab.siblings(".anilisttabwrapper").css("display","none");
       formattab.siblings(".formattabwrapper").css("display","inherit");
 
       innerform.children(".commentfacewrapper").children(".commentfacecontainer").html("");
-      setUpFormat(innerform);
+
     }
     else {
       formattab.siblings(".formattabwrapper").css("display","none");
