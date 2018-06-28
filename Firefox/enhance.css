@@ -3,6 +3,7 @@
   margin-bottom: 5px;
   border-radius: 5px;
   color: grey;
+  margin-left: 6px;
 }
 .showallcommentfaces, .showrecentcommentfaces, .showrecentfavouritefaces, .addSpoiler {
   border-radius: 5px;
@@ -22,20 +23,27 @@
    user-select: none;
    line-height: 30px;
 }
-.stab {
-  padding: 5px 15px 5px 10px;
-  background: beige;
-  color:grey;
-  border-radius: 0 25px 25px 0;
+.commentfaces .stab {
+  padding: 5px 15px;
+  background: white;
+  color: grey !important;
   cursor: default;
-  line-height: 30px;
-  margin-right: 3px;
+  line-height: 40px;
+  margin-left: 6px;
+  border: 1px solid lightgrey;
+}
+.commentfaces .stab:hover {
+  color:darkgrey !important;
+}
+.res-nightmode .commentfaces .stab {
+  background: #999;
+  color:black !important;
+}
+.res-nightmode .commentfaces .stab:hover {
+  color:lightgrey !important;
 }
 .stabactive {
   background:bisque;
-}
-.stab:hover {
-  color:lightgrey;
 }
 .tabwrapper {
   display: none;
@@ -82,10 +90,16 @@
   width:100%;
 }
 .browseAniListtable tr:nth-child(even) {
-  background:Ivory;
+  background:MistyRose;
 }
 .browseAniListtable tr:nth-child(odd) {
-  background:Azure;
+  background:SeaShell;
+}
+.res-nightmode .browseAniListtable tr:nth-child(even) {
+  background:SlateGray;
+}
+.res-nightmode .browseAniListtable tr:nth-child(odd) {
+  background:DarkSlateGray;
 }
 .browseAniListtable  td {
    text-align:center;
@@ -95,13 +109,14 @@
 }
 .browseAniListtable tr:hover .anilistsearchimg {
   filter:brightness(110%);
-  border:5px dotted green;
+  border:5px dotted red;
 }
 .anilistsearchimg {
   cursor:pointer;
   border:5px solid rgba(0,0,0,0);
+  /* box-shadow: 0 5px 20px rgba(255, 255, 255, 1); */
 }
 .browseAniListtable tr .anilistsearchimg:hover {
   filter:brightness(120%);
-  border:5px solid green;
+  border:5px solid red;
 }

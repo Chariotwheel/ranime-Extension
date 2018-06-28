@@ -35,30 +35,26 @@ function onError(error) {
 
 function onGot(result) {
 
-  if(result.opcommentfaces !== undefined) {
+  if(result.opcommentfaces !== undefined)
     cf = result.opcommentfaces;
-  }
-  else {
+  else
     cf = true;
-  }
 
-  if(result.opanisearch !== undefined) {
+  if(result.opanisearch !== undefined)
     as = result.opanisearch;
-  }
-  else {
+  else
     as = true;
-  }
 
-  if(result.opspoiler !== undefined) {
+  if(result.opspoiler !== undefined)
     sp = result.opspoiler;
-  }
-  else {
+  else
     sp = false;
-  }
 
   createMenu(cf,as,sp);
 
 }
+
+// Get Option Data from Storage
 
 var getting = browser.storage.local.get(["opcommentfaces","opanisearch","opspoiler"]);
 getting.then(onGot, onError);
