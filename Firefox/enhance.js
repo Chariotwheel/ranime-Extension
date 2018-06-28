@@ -27,10 +27,6 @@ request.send();
 
 var filteredFaces = [];
 
-/*
-** Preparing the Commentface Menu
-*/
-
 // Get Stored options
 
 function onError(error) {
@@ -190,10 +186,6 @@ for(var i = 0; i < saveButton.length; i++){
     });
 }
 
-/*
-**
-*/
-
 function createCommentfacefield(form) {
 
   var innerform = $(form).children(".ranimeenhanced").children(".commentfaces");
@@ -351,7 +343,7 @@ function createCommentfaces(innerform) {
             /*
             ** Setting up actions on Clicking the Dummy Commentfaces
             */
-             activecommentfaces[i].addEventListener('mousedown', addClickEvent, false);
+             activecommentfaces[i].addEventListener('click', addClickEvent, false);
         }
       });
 
@@ -363,10 +355,10 @@ function createCommentfaces(innerform) {
       inner += "<strong>"+textbottom+"</strong>";
     }
     if(url == "manga") {
-      return "<a href=\"//#"+filteredFace+"\" class=\"addCommentface\" title=\""+texthover+"\" data-href-url=\"//#"+filteredFace+"\">"+inner+"</a>";
+      return '<a href="//#'+filteredFace+'" class="addCommentface" title="'+texthover+'" data-href-url="//#'+filteredFace+'">'+inner+'</a>';
     }
-    else if(url == "anime" || url == "ftfanime") {
-      return "<a href=\"#"+filteredFace+"\" class=\"addCommentface\" title=\""+texthover+"\" data-href-url=\"#"+filteredFace+"\" rel=\"nofollow\">"+inner+"</a>";
+    else if(url == "anime" || url == "ftfanime" || url == "AnimeImpressions") {
+      return '<a href="#'+filteredFace+'" class="addCommentface" title="'+texthover+'" data-href-url="#'+filteredFace+'" rel="nofollow">'+inner+'</a>';
     }
 
   }
@@ -392,7 +384,10 @@ function createCommentfaces(innerform) {
             storageItemList = storageItemList.reverse();
 
             storageItemList.forEach(function(itemList) {
-                result += generateCommentfaces(itemList,texttop, textbottom, texthover);
+                // Check if Commentface Code is included in the subs CSS, if not, don't show it
+                if (commentfaces.includes(itemList.replace("#","")))
+                  result += generateCommentfaces(itemList.replace("#",""),texttop, textbottom, texthover);
+
             });
           }
 
@@ -404,7 +399,7 @@ function createCommentfaces(innerform) {
           var activecommentfaces = $(this).parents(".commenttabwrapper").siblings(".commentfacewrapper").children(".commentfacecontainer").children(".addCommentface");
 
           for (var i = 0; i < activecommentfaces.length; i++) {
-              activecommentfaces[i].addEventListener('mousedown', addClickEvent, false);
+              activecommentfaces[i].addEventListener('click', addClickEvent, false);
 
           }
       });
@@ -502,7 +497,9 @@ function saveRecentFaces(store){
   }
 }
 
-function addClickEvent() {
+function addClickEvent(e) {
+
+  e.preventDefault();
 
   /*
   ** Get href from clickedCommentface to set it into the textarea
@@ -769,6 +766,8 @@ function searchOnAniList(searchterm, targetelement, field) {
           }
         }
           result += '</table>';
+          if(result === '<table class="browseAniListtable"></table>')
+            result = "No records to your query returned.";
           targetelement.parents(".anilisttabwrapper").siblings(".commentfacewrapper").css("display","inherit");
           targetelement.parents(".anilisttabwrapper").siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 

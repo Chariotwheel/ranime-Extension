@@ -18,7 +18,8 @@
       "matches": [
         "*://*.reddit.com/r/anime/*",
         "*://*.reddit.com/r/manga/*",
-        "*://*.reddit.com/r/ftfanime/*"
+        "*://*.reddit.com/r/ftfanime/*",
+        "*://*.reddit.com/r/AnimeImpressions/*"
       ],
       "js": [
         "jquery-3.3.1.min.js",

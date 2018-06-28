@@ -20,6 +20,7 @@
    -webkit-user-select: none;
    -ms-user-select: none;
    user-select: none;
+   line-height: 30px;
 }
 .stab {
   padding: 5px 15px 5px 10px;
@@ -91,4 +92,16 @@
 }
 .modal-dialog {
   margin-top:0 !important;
+}
+.browseAniListtable tr:hover .anilistsearchimg {
+  filter:brightness(110%);
+  border:5px dotted green;
+}
+.anilistsearchimg {
+  cursor:pointer;
+  border:5px solid rgba(0,0,0,0);
+}
+.browseAniListtable tr .anilistsearchimg:hover {
+  filter:brightness(120%);
+  border:5px solid green;
 }
