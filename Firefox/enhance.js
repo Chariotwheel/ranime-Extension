@@ -669,7 +669,7 @@ function searchOnAniList(searchterm, targetelement, field) {
     var variables = {
         search: searchterm,
         page: 1,
-        perPage: 12
+        perPage: 80
     };
 
     var url = 'https://graphql.anilist.co',
