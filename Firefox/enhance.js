@@ -343,7 +343,7 @@ function createCommentfaces(innerform) {
             /*
             ** Setting up actions on Clicking the Dummy Commentfaces
             */
-             activecommentfaces[i].addEventListener('click', addClickEvent, false);
+             activecommentfaces[i].addEventListener('mousedown', addClickEvent, false);
         }
       });
 
@@ -399,7 +399,7 @@ function createCommentfaces(innerform) {
           var activecommentfaces = $(this).parents(".commenttabwrapper").siblings(".commentfacewrapper").children(".commentfacecontainer").children(".addCommentface");
 
           for (var i = 0; i < activecommentfaces.length; i++) {
-              activecommentfaces[i].addEventListener('click', addClickEvent, false);
+              activecommentfaces[i].addEventListener('mousedown', addClickEvent, false);
 
           }
       });
