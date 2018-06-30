@@ -50,13 +50,22 @@ function onGot(result) {
   else
     sp = false;
 
+  if(result.nuspoiler !== undefined)
+    nsp = result.nuspoiler;
+  else
+    nsp = false;
+
+  if(nsp)
+    nuSpoilers();
+
   createMenu(cf,as,sp);
+
 
 }
 
 // Get Option Data from Storage
 
-var getting = browser.storage.local.get(["opcommentfaces","opanisearch","opspoiler"]);
+var getting = browser.storage.local.get(["opcommentfaces","opanisearch","opspoiler","nuspoiler"]);
 getting.then(onGot, onError);
 
 // Create Menu
@@ -118,13 +127,7 @@ for(var i = 0; i < replyButton.length; i++){
 
     var form = $( this ).parents(".entry").siblings(".child").children('form');
 
-    /*
-    ** Remove Copy from initial reply field and clear commentfield
-    */
-
     form.children(".md").remove();
-    var marked = window.getSelection().toString();
-    form.children(".usertext-edit").children(".md").children("textarea").val(marked);
 
     /*
     ** Add new field
@@ -137,6 +140,7 @@ for(var i = 0; i < replyButton.length; i++){
     initializeTabs();
 
   });
+
 }
 
 /*
@@ -786,4 +790,25 @@ function searchOnAniList(searchterm, targetelement, field) {
     function handleError(error) {
         //console.error(error);
     }
+}
+
+/*
+** Make New Spoiler work like Old Spoiler
+*/
+//this.click();
+//document.getElementsByClassName("spoiler-text-tooltip").firstChild.style.display = "none";
+
+function nuSpoilers(nsp) {
+
+  var nuspoiler = document.getElementsByClassName("md-spoiler-text");
+
+  for(var i = 0; i < nuspoiler.length; i++){
+    nuspoiler[i].addEventListener('mouseover', function(){
+      this.classList.add("revealed");
+    });
+    nuspoiler[i].addEventListener('mouseout', function(){
+      this.classList.remove("revealed");
+    });
+
+  }
 }

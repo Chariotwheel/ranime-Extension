@@ -3,7 +3,8 @@ function saveOptions(e) {
   browser.storage.local.set({
     opcommentfaces: document.querySelector("#commentfaces").checked,
     opanisearch: document.querySelector("#anisearch").checked,
-    opspoiler: document.querySelector("#spoiler").checked
+    opspoiler: document.querySelector("#spoiler").checked,
+    nuspoiler: document.querySelector("#nuspoiler").checked
   });
 }
 
@@ -29,13 +30,19 @@ function restoreOptions() {
       document.querySelector("#spoiler").checked = false;
     }
 
+    if(result.nuspoiler !== undefined) {
+      document.querySelector("#nuspoiler").checked = result.nuspoiler;
+    } else {
+      document.querySelector("#nuspoiler").checked = false;
+    }
+
   }
 
   function onError(error) {
     console.log(`Error: ${error}`);
   }
 
-  var getting = browser.storage.local.get(["opcommentfaces","opanisearch","opspoiler"]);
+  var getting = browser.storage.local.get(["opcommentfaces","opanisearch","opspoiler","nuspoiler"]);
   getting.then(setCurrentChoice, onError);
 
 }
