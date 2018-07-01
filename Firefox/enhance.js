@@ -536,7 +536,7 @@ function addClickEvent(e) {
 
   insertOutput(output,formfield);
 
-  e.event.stopImmediatePropagation();
+  e.stopImmediatePropagation();
 
 }
 
