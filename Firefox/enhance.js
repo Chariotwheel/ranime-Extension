@@ -795,8 +795,6 @@ function searchOnAniList(searchterm, targetelement, field) {
 /*
 ** Make New Spoiler work like Old Spoiler
 */
-//this.click();
-//document.getElementsByClassName("spoiler-text-tooltip").firstChild.style.display = "none";
 
 function nuSpoilers(nsp) {
 

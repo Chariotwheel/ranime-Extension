@@ -3,7 +3,8 @@ function saveOptions(e) {
   chrome.storage.local.set({
     "opcommentfaces": document.querySelector("#commentfaces").checked,
     "opanisearch": document.querySelector("#anisearch").checked,
-    "opspoiler": document.querySelector("#spoiler").checked
+    "opspoiler": document.querySelector("#spoiler").checked,
+    "opnuspoiler": document.querySelector("#nuspoiler").checked
   });
 }
 
@@ -36,6 +37,16 @@ function restoreOptions() {
     }
     else {
       document.querySelector("#spoiler").checked = true;
+    }
+  });
+
+  var getting = chrome.storage.local.get("opnuspoiler",
+  function(obj) {
+    if(obj !== undefined) {
+      document.querySelector("#nuspoiler").checked = obj.opnuspoiler;
+    }
+    else {
+      document.querySelector("#nuspoiler").checked = true;
     }
   });
 

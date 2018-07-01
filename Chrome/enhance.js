@@ -4,6 +4,7 @@
 
 var url = window.location.href;
 url = url.replace("https://www.reddit.com/r/","");
+url = url.replace("https://old.reddit.com/r/","");
 url = url.slice(0, url.indexOf("/"));
 
 /*
@@ -130,8 +131,8 @@ for(var i = 0; i < replyButton.length; i++){
     */
 
     form.children(".md").remove();
-    var marked = window.getSelection().toString();
-    form.children(".usertext-edit").children(".md").children("textarea").val(marked);
+    //var marked = window.getSelection().toString();
+    //form.children(".usertext-edit").children(".md").children("textarea").val(marked);
 
     /*
     ** Add new field
@@ -140,8 +141,8 @@ for(var i = 0; i < replyButton.length; i++){
     form.prepend( menu );
     createCommentfacefield(form);
 
-    var innerform = $(form).children(".ranimeenhanced").children(".commentfaces");
-    initializeTabs();
+    //var innerform = $(form).children(".ranimeenhanced").children(".commentfaces");
+    //initializeTabs(innerform);
 
   });
 }
@@ -274,6 +275,7 @@ function createCommentfaces(innerform) {
     filteredFaces.forEach(function(filteredFace) {
           result += generateCommentfaces(filteredFace,texttop, textbottom, texthover);
     });
+
     $(this).parents(".commenttabwrapper").siblings('.commentfacewrapper').children('.commentfacecontainer').html(result);
 
     var activecommentfaces = $(this).parents(".commenttabwrapper").siblings(".commentfacewrapper").children(".commentfacecontainer").children(".addCommentface");
@@ -505,9 +507,7 @@ function saveRecentFaces(store){
 
 function addClickEvent(e) {
 
-  //e.preventDefault();
-
-  console.log("test");
+  e.preventDefault();
 
   /*
   ** Get href from clickedCommentface to set it into the textarea
@@ -540,7 +540,7 @@ function addClickEvent(e) {
 
   insertOutput(output,formfield);
 
-  e.event.stopImmediatePropagation();
+  e.stopImmediatePropagation();
 
 }
 
@@ -793,4 +793,32 @@ function searchOnAniList(searchterm, targetelement, field) {
     function handleError(error) {
         //console.error(error);
     }
+}
+
+/*
+** Make New Spoiler work like Old Spoiler
+*/
+
+chrome.storage.local.get("opnuspoiler",
+function(obj) {
+  if(obj.opnuspoiler !== undefined)
+    nsp = obj.opnuspoiler;
+  else
+    nsp = true;
+  nuSpoilers(nsp);
+});
+
+function nuSpoilers(nsp) {
+
+  var nuspoiler = document.getElementsByClassName("md-spoiler-text");
+
+  for(var i = 0; i < nuspoiler.length; i++){
+    nuspoiler[i].addEventListener('mouseover', function(){
+      this.classList.add("revealed");
+    });
+    nuspoiler[i].addEventListener('mouseout', function(){
+      this.classList.remove("revealed");
+    });
+
+  }
 }
