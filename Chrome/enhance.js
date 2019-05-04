@@ -6,7 +6,6 @@ var url = window.location.href;
 url = url.replace("https://www.reddit.com/r/","");
 url = url.replace("https://old.reddit.com/r/","");
 url = url.slice(0, url.indexOf("/"));
-
 /*
 ** Call API and load up JSON fule into array
 */
@@ -100,7 +99,8 @@ function createMenu(cf,as,sp) {
   }
   if(sp) {
     menu += '<div class="tabwrapper formattabwrapper">';
-      menu += '<a class="addSpoiler">Spoiler</a>';
+      menu += '<a class="addSpoiler oldspoiler">Old Spoiler</a>';
+	  menu += '<a class="addSpoiler newspoiler">New Spoiler</a>';
     menu += '</div>';
   }
   menu += '<div class="commentfacewrapper">';
@@ -459,17 +459,28 @@ function setUpFormat(innerform){
   innerform.children(".formattabwrapper").children(".addSpoiler").mousedown(function(e){
 
     e.preventDefault;
+	
+	var ver = "old";
+	if($(this)[0].classList.contains("newspoiler")){
+		ver = "new";
+	}
 
     var txtarea = $(this).parents(".formattabwrapper").parents(".commentfaces").parents(".md").siblings(".usertext-edit").children(".md").children("textarea");
     var start = txtarea[0].selectionStart;
     var finish = txtarea[0].selectionEnd;
     var sel = txtarea[0].value.substring(start, finish);
-
-    if(sel !== "")
-      var output = '[](/s "' + sel + '")';
-    else
-      var output = '[](/s "")';
-
+	if(ver == "old"){
+		if(sel !== "")
+		  var output = '[](/s "' + sel + '")';
+		else
+		  var output = '[]()';
+	}
+	else {
+		if(sel !== "")
+		  var output = '>!' + sel + '!<';
+		else
+		  var output = '>!!<';
+	}
     var formfieldbefore = txtarea.val().substr(0,start);
     var formfieldafter = txtarea.val().substr(finish,txtarea.val().length)
 
